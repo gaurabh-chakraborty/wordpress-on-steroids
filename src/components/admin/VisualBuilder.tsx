@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback } from 'react';
 import { 
   Palette, 
@@ -48,7 +47,7 @@ interface ElementStyle {
   color?: string;
   fontSize?: string;
   fontWeight?: string;
-  textAlign?: string;
+  textAlign?: 'left' | 'center' | 'right' | 'justify';
   padding?: string;
   margin?: string;
   borderRadius?: string;
