@@ -28,7 +28,7 @@ export interface Page {
   title: string;
   content: string;
   slug: string;
-  status: 'published' | 'draft';
+  status: 'published' | 'draft' | 'pending';
   template: string;
   createdAt: string;
   updatedAt: string;

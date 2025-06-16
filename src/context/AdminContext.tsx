@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { User, Post, Page, Plugin, MediaItem, DashboardStats } from '@/types/admin';
 
