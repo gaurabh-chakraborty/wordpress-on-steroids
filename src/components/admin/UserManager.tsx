@@ -6,10 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useAdmin } from '@/context/AdminContext';
+import { UserEditor } from './UserEditor';
+import { User } from '@/types/admin';
 
 export const UserManager = () => {
-  const { users } = useAdmin();
+  const { users, deleteUser } = useAdmin();
   const [searchTerm, setSearchTerm] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
 
   const filteredUsers = users.filter(user =>
     user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -26,6 +30,31 @@ export const UserManager = () => {
     }
   };
 
+  const handleEdit = (user: User) => {
+    setEditingUser(user);
+    setIsEditing(true);
+  };
+
+  const handleAddNew = () => {
+    setEditingUser(null);
+    setIsEditing(true);
+  };
+
+  const handleDelete = (userId: string) => {
+    if (confirm('Are you sure you want to delete this user?')) {
+      deleteUser(userId);
+    }
+  };
+
+  if (isEditing) {
+    return (
+      <UserEditor 
+        user={editingUser || undefined}
+        onBack={() => setIsEditing(false)}
+      />
+    );
+  }
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -34,7 +63,7 @@ export const UserManager = () => {
           <h1 className="text-3xl font-bold text-gray-900">Users</h1>
           <p className="text-gray-600 mt-1">Manage user accounts and permissions.</p>
         </div>
-        <Button className="flex items-center space-x-2">
+        <Button className="flex items-center space-x-2" onClick={handleAddNew}>
           <Plus className="w-4 h-4" />
           <span>Add New User</span>
         </Button>
@@ -95,7 +124,11 @@ export const UserManager = () => {
                 </div>
                 
                 <div className="flex items-center space-x-2">
-                  <Button variant="ghost" size="sm">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => handleEdit(user)}
+                  >
                     <Edit className="w-4 h-4" />
                   </Button>
                   <Button variant="ghost" size="sm">
@@ -105,6 +138,7 @@ export const UserManager = () => {
                     variant="ghost" 
                     size="sm"
                     className="text-red-600 hover:text-red-700"
+                    onClick={() => handleDelete(user.id)}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>

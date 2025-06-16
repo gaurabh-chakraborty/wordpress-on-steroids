@@ -18,6 +18,9 @@ interface AdminContextType {
   createPage: (page: Omit<Page, 'id' | 'createdAt' | 'updatedAt'>) => void;
   updatePage: (id: string, updates: Partial<Page>) => void;
   deletePage: (id: string) => void;
+  createUser: (user: Omit<User, 'id'>) => void;
+  updateUser: (id: string, updates: Partial<User>) => void;
+  deleteUser: (id: string) => void;
   togglePlugin: (id: string) => void;
   installPlugin: (plugin: Plugin) => void;
 }
@@ -59,6 +62,19 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       tags: ['welcome', 'getting-started'],
       categories: ['General'],
       featuredImage: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=200&fit=crop'
+    },
+    {
+      id: '2',
+      title: 'Getting Started with Content Creation',
+      content: 'Learn how to create amazing content with our powerful editor.',
+      excerpt: 'A comprehensive guide to content creation...',
+      status: 'draft',
+      author: 'admin',
+      createdAt: '2024-01-02T00:00:00Z',
+      updatedAt: '2024-01-02T00:00:00Z',
+      tags: ['tutorial', 'content'],
+      categories: ['Tutorials'],
+      featuredImage: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=200&fit=crop'
     }
   ]);
 
@@ -75,7 +91,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     }
   ]);
 
-  const [users] = useState<User[]>([
+  const [users, setUsers] = useState<User[]>([
     currentUser,
     {
       id: '2',
@@ -83,6 +99,15 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       email: 'editor@example.com',
       role: 'editor',
       createdAt: '2024-01-02T00:00:00Z'
+    },
+    {
+      id: '3',
+      username: 'author',
+      email: 'author@example.com',
+      role: 'author',
+      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=40&h=40&fit=crop&crop=face',
+      createdAt: '2024-01-03T00:00:00Z',
+      lastLogin: '2024-01-10T00:00:00Z'
     }
   ]);
 
@@ -114,7 +139,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       version: '1.5.0',
       author: 'Social Team',
       isActive: false,
-      isInstalled: false,
+      isInstalled: true,
       icon: 'Share2'
     }
   ]);
@@ -128,6 +153,15 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       size: 234567,
       uploadedAt: '2024-01-01T00:00:00Z',
       alt: 'Hero image'
+    },
+    {
+      id: '2',
+      filename: 'blog-featured.jpg',
+      url: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&h=400&fit=crop',
+      type: 'image',
+      size: 345678,
+      uploadedAt: '2024-01-02T00:00:00Z',
+      alt: 'Blog featured image'
     }
   ]);
 
@@ -143,6 +177,14 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         action: 'published',
         description: 'Published "Welcome to Your New Admin Panel"',
         timestamp: '2024-01-01T00:00:00Z',
+        user: 'admin'
+      },
+      {
+        id: '2',
+        type: 'user',
+        action: 'created',
+        description: 'Created new user "editor"',
+        timestamp: '2024-01-02T00:00:00Z',
         user: 'admin'
       }
     ]
@@ -192,6 +234,24 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     setPages(prev => prev.filter(page => page.id !== id));
   };
 
+  const createUser = (userData: Omit<User, 'id'>) => {
+    const newUser: User = {
+      ...userData,
+      id: Date.now().toString()
+    };
+    setUsers(prev => [...prev, newUser]);
+  };
+
+  const updateUser = (id: string, updates: Partial<User>) => {
+    setUsers(prev => prev.map(user => 
+      user.id === id ? { ...user, ...updates } : user
+    ));
+  };
+
+  const deleteUser = (id: string) => {
+    setUsers(prev => prev.filter(user => user.id !== id));
+  };
+
   const togglePlugin = (id: string) => {
     setPlugins(prev => prev.map(plugin =>
       plugin.id === id ? { ...plugin, isActive: !plugin.isActive } : plugin
@@ -221,6 +281,9 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       createPage,
       updatePage,
       deletePage,
+      createUser,
+      updateUser,
+      deleteUser,
       togglePlugin,
       installPlugin
     }}>

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { FileText, Plus, Search, Filter, Edit, Trash2, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,54 +7,16 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useAdmin } from '@/context/AdminContext';
+import { PostEditor } from './PostEditor';
 import { Post } from '@/types/admin';
 
-const mockPosts: Post[] = [
-  {
-    id: '1',
-    title: 'Exploring the Depths of React Hooks',
-    content: 'A detailed guide on mastering React Hooks for efficient state management.',
-    excerpt: 'Master React Hooks for efficient state management.',
-    status: 'published',
-    author: 'John Doe',
-    createdAt: '2023-01-15',
-    updatedAt: '2023-01-20',
-    tags: ['react', 'hooks', 'javascript'],
-    categories: ['web development'],
-    featuredImage: 'https://via.placeholder.com/150',
-  },
-  {
-    id: '2',
-    title: 'The Ultimate Guide to Tailwind CSS',
-    content: 'Learn how to build beautiful and responsive websites with Tailwind CSS.',
-    excerpt: 'Build beautiful and responsive websites with Tailwind CSS.',
-    status: 'draft',
-    author: 'Jane Smith',
-    createdAt: '2023-02-01',
-    updatedAt: '2023-02-05',
-    tags: ['tailwindcss', 'css', 'frontend'],
-    categories: ['web development'],
-    featuredImage: 'https://via.placeholder.com/150',
-  },
-  {
-    id: '3',
-    title: 'Getting Started with TypeScript',
-    content: 'An introduction to TypeScript and how it can improve your JavaScript code.',
-    excerpt: 'Improve your JavaScript code with TypeScript.',
-    status: 'published',
-    author: 'David Johnson',
-    createdAt: '2023-03-10',
-    updatedAt: '2023-03-15',
-    tags: ['typescript', 'javascript', 'programming'],
-    categories: ['web development'],
-    featuredImage: 'https://via.placeholder.com/150',
-  },
-];
-
 export const PostManager = () => {
-  const [posts, setPosts] = useState(mockPosts);
+  const { posts, deletePost, updatePost } = useAdmin();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
 
   const filteredPosts = posts.filter(post => {
     const searchMatch = post.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -61,13 +24,57 @@ export const PostManager = () => {
     return searchMatch && statusMatch;
   });
 
+  const handleStatusChange = (postId: string, newStatus: 'published' | 'draft' | 'pending') => {
+    updatePost(postId, { status: newStatus });
+  };
+
+  const handleDelete = (postId: string) => {
+    if (confirm('Are you sure you want to delete this post?')) {
+      deletePost(postId);
+    }
+  };
+
+  const handleEdit = (post: Post) => {
+    setEditingPost(post);
+    setIsEditing(true);
+  };
+
+  const handleAddNew = () => {
+    setEditingPost(null);
+    setIsEditing(true);
+  };
+
+  const getStatusVariant = (status: string) => {
+    switch (status) {
+      case 'published':
+        return 'default';
+      case 'draft':
+        return 'secondary';
+      case 'pending':
+        return 'outline';
+      default:
+        return 'secondary';
+    }
+  };
+
+  if (isEditing) {
+    return (
+      <PostEditor 
+        post={editingPost || undefined}
+        onBack={() => setIsEditing(false)}
+      />
+    );
+  }
+
   return (
     <div className="container py-10">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle>Posts</CardTitle>
           <div className="space-x-2">
-            <Button><Plus className="mr-2 h-4 w-4" /> Add Post</Button>
+            <Button onClick={handleAddNew}>
+              <Plus className="mr-2 h-4 w-4" /> Add Post
+            </Button>
           </div>
         </CardHeader>
         <CardContent>
@@ -106,10 +113,10 @@ export const PostManager = () => {
                 <TableBody>
                   {filteredPosts.map(post => (
                     <TableRow key={post.id}>
-                      <TableCell>{post.title}</TableCell>
+                      <TableCell className="font-medium">{post.title}</TableCell>
                       <TableCell>{post.author}</TableCell>
                       <TableCell>
-                        <Badge variant={post.status === 'published' ? 'success' : post.status === 'draft' ? 'secondary' : 'warning'}>
+                        <Badge variant={getStatusVariant(post.status)}>
                           {post.status}
                         </Badge>
                       </TableCell>
@@ -117,9 +124,23 @@ export const PostManager = () => {
                       <TableCell>{post.categories.join(', ')}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end space-x-2">
-                          <Button size="icon" variant="ghost"><Eye className="h-4 w-4" /></Button>
-                          <Button size="icon" variant="ghost"><Edit className="h-4 w-4" /></Button>
-                          <Button size="icon" variant="ghost"><Trash2 className="h-4 w-4" /></Button>
+                          <Button size="icon" variant="ghost">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            size="icon" 
+                            variant="ghost"
+                            onClick={() => handleEdit(post)}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            size="icon" 
+                            variant="ghost"
+                            onClick={() => handleDelete(post.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
