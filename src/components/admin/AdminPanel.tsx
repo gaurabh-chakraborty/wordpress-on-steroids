@@ -9,6 +9,7 @@ import { VisualBuilder } from './VisualBuilder';
 import { UserManager } from './UserManager';
 import { MediaLibrary } from './MediaLibrary';
 import { Settings } from './Settings';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 const AdminContent = () => {
   const { activeSection } = useAdmin();
@@ -37,12 +38,17 @@ const AdminContent = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
-      <AdminSidebar />
-      <div className="flex-1 overflow-auto">
-        {renderContent()}
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-gray-50">
+        <AdminSidebar />
+        <main className="flex-1 overflow-auto">
+          <div className="p-4 md:hidden">
+            <SidebarTrigger />
+          </div>
+          {renderContent()}
+        </main>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
