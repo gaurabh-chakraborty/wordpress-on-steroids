@@ -4,6 +4,7 @@ import { AdminProvider, useAdmin } from '@/context/AdminContext';
 import { AdminSidebar } from './AdminSidebar';
 import { Dashboard } from './Dashboard';
 import { PostManager } from './PostManager';
+import { PageManager } from './PageManager';
 import { PluginManager } from './PluginManager';
 import { VisualBuilder } from './VisualBuilder';
 import { UserManager } from './UserManager';
@@ -21,7 +22,7 @@ const AdminContent = () => {
       case 'posts':
         return <PostManager />;
       case 'pages':
-        return <PostManager />; // Pages use similar interface
+        return <PageManager />;
       case 'users':
         return <UserManager />;
       case 'media':
