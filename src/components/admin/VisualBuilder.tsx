@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { 
   Palette, 
   Square, 
@@ -72,12 +72,31 @@ interface Element {
   children?: Element[];
 }
 
+interface ResizeHandle {
+  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'top' | 'bottom' | 'left' | 'right';
+  cursor: string;
+}
+
+const resizeHandles: ResizeHandle[] = [
+  { position: 'top-left', cursor: 'nw-resize' },
+  { position: 'top-right', cursor: 'ne-resize' },
+  { position: 'bottom-left', cursor: 'sw-resize' },
+  { position: 'bottom-right', cursor: 'se-resize' },
+  { position: 'top', cursor: 'n-resize' },
+  { position: 'bottom', cursor: 's-resize' },
+  { position: 'left', cursor: 'w-resize' },
+  { position: 'right', cursor: 'e-resize' }
+];
+
 export const VisualBuilder = () => {
   const [selectedElement, setSelectedElement] = useState<Element | null>(null);
   const [viewport, setViewport] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [activeTab, setActiveTab] = useState('content');
   const [draggedElement, setDraggedElement] = useState<string | null>(null);
   const [isResizing, setIsResizing] = useState(false);
+  const [resizeStart, setResizeStart] = useState<{ x: number; y: number; width: number; height: number; handle: string } | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState<{ x: number; y: number; elementX: number; elementY: number } | null>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   
   const [elements, setElements] = useState<Element[]>([
@@ -113,6 +132,116 @@ export const VisualBuilder = () => {
     { key: 'tablet', label: 'Tablet', icon: Tablet },
     { key: 'mobile', label: 'Mobile', icon: Smartphone }
   ];
+
+  // Mouse event handlers for resizing
+  const handleMouseDown = useCallback((e: React.MouseEvent, elementId: string, handle?: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const element = elements.find(el => el.id === elementId);
+    if (!element) return;
+
+    if (handle) {
+      setIsResizing(true);
+      setResizeStart({
+        x: e.clientX,
+        y: e.clientY,
+        width: element.size.width,
+        height: element.size.height,
+        handle
+      });
+    } else {
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX,
+        y: e.clientY,
+        elementX: element.position.x,
+        elementY: element.position.y
+      });
+    }
+  }, [elements]);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (isResizing && resizeStart && selectedElement) {
+      const deltaX = e.clientX - resizeStart.x;
+      const deltaY = e.clientY - resizeStart.y;
+      
+      let newWidth = resizeStart.width;
+      let newHeight = resizeStart.height;
+      let newX = selectedElement.position.x;
+      let newY = selectedElement.position.y;
+
+      switch (resizeStart.handle) {
+        case 'bottom-right':
+          newWidth = Math.max(20, resizeStart.width + deltaX);
+          newHeight = Math.max(20, resizeStart.height + deltaY);
+          break;
+        case 'bottom-left':
+          newWidth = Math.max(20, resizeStart.width - deltaX);
+          newHeight = Math.max(20, resizeStart.height + deltaY);
+          newX = selectedElement.position.x + deltaX;
+          break;
+        case 'top-right':
+          newWidth = Math.max(20, resizeStart.width + deltaX);
+          newHeight = Math.max(20, resizeStart.height - deltaY);
+          newY = selectedElement.position.y + deltaY;
+          break;
+        case 'top-left':
+          newWidth = Math.max(20, resizeStart.width - deltaX);
+          newHeight = Math.max(20, resizeStart.height - deltaY);
+          newX = selectedElement.position.x + deltaX;
+          newY = selectedElement.position.y + deltaY;
+          break;
+        case 'right':
+          newWidth = Math.max(20, resizeStart.width + deltaX);
+          break;
+        case 'left':
+          newWidth = Math.max(20, resizeStart.width - deltaX);
+          newX = selectedElement.position.x + deltaX;
+          break;
+        case 'bottom':
+          newHeight = Math.max(20, resizeStart.height + deltaY);
+          break;
+        case 'top':
+          newHeight = Math.max(20, resizeStart.height - deltaY);
+          newY = selectedElement.position.y + deltaY;
+          break;
+      }
+
+      updateElement(selectedElement.id, {
+        size: { width: newWidth, height: newHeight },
+        position: { x: Math.max(0, newX), y: Math.max(0, newY) }
+      });
+    } else if (isDragging && dragStart && selectedElement) {
+      const deltaX = e.clientX - dragStart.x;
+      const deltaY = e.clientY - dragStart.y;
+      
+      updateElement(selectedElement.id, {
+        position: { 
+          x: Math.max(0, dragStart.elementX + deltaX), 
+          y: Math.max(0, dragStart.elementY + deltaY) 
+        }
+      });
+    }
+  }, [isResizing, isDragging, resizeStart, dragStart, selectedElement]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsResizing(false);
+    setIsDragging(false);
+    setResizeStart(null);
+    setDragStart(null);
+  }, []);
+
+  useEffect(() => {
+    if (isResizing || isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isResizing, isDragging, handleMouseMove, handleMouseUp]);
 
   const addElement = useCallback((type: Element['type']) => {
     const newElement: Element = {
@@ -152,7 +281,12 @@ export const VisualBuilder = () => {
     setElements(prev => prev.map(el => 
       el.id === id ? { ...el, ...updates } : el
     ));
-  }, []);
+    
+    // Update selected element if it's the one being updated
+    if (selectedElement?.id === id) {
+      setSelectedElement(prev => prev ? { ...prev, ...updates } : null);
+    }
+  }, [selectedElement]);
 
   const deleteElement = useCallback((id: string) => {
     setElements(prev => prev.filter(el => el.id !== id));
@@ -191,6 +325,57 @@ export const VisualBuilder = () => {
       position: { x: Math.max(0, x), y: Math.max(0, y) }
     });
     setDraggedElement(null);
+  };
+
+  const ResizeHandles = ({ element }: { element: Element }) => {
+    if (!selectedElement || selectedElement.id !== element.id) return null;
+
+    return (
+      <>
+        {resizeHandles.map((handle) => {
+          const getHandleStyle = (): React.CSSProperties => {
+            const baseStyle: React.CSSProperties = {
+              position: 'absolute',
+              width: '8px',
+              height: '8px',
+              backgroundColor: '#3b82f6',
+              border: '1px solid #ffffff',
+              cursor: handle.cursor,
+              zIndex: 1000
+            };
+
+            switch (handle.position) {
+              case 'top-left':
+                return { ...baseStyle, top: -4, left: -4 };
+              case 'top-right':
+                return { ...baseStyle, top: -4, right: -4 };
+              case 'bottom-left':
+                return { ...baseStyle, bottom: -4, left: -4 };
+              case 'bottom-right':
+                return { ...baseStyle, bottom: -4, right: -4 };
+              case 'top':
+                return { ...baseStyle, top: -4, left: '50%', transform: 'translateX(-50%)' };
+              case 'bottom':
+                return { ...baseStyle, bottom: -4, left: '50%', transform: 'translateX(-50%)' };
+              case 'left':
+                return { ...baseStyle, left: -4, top: '50%', transform: 'translateY(-50%)' };
+              case 'right':
+                return { ...baseStyle, right: -4, top: '50%', transform: 'translateY(-50%)' };
+              default:
+                return baseStyle;
+            }
+          };
+
+          return (
+            <div
+              key={handle.position}
+              style={getHandleStyle()}
+              onMouseDown={(e) => handleMouseDown(e, element.id, handle.position)}
+            />
+          );
+        })}
+      </>
+    );
   };
 
   const StylePanel = () => (
@@ -424,7 +609,7 @@ export const VisualBuilder = () => {
       top: element.position.y,
       width: element.size.width,
       height: element.size.height,
-      cursor: 'pointer',
+      cursor: isDragging ? 'grabbing' : 'grab',
       border: isSelected ? '2px solid #3b82f6' : '1px solid transparent',
       ...element.styles
     };
@@ -432,11 +617,17 @@ export const VisualBuilder = () => {
     return (
       <div
         key={element.id}
-        className={`group ${isSelected ? 'ring-2 ring-blue-500' : ''} hover:ring-2 hover:ring-blue-300`}
+        className={`group relative ${isSelected ? 'ring-2 ring-blue-500' : ''} hover:ring-2 hover:ring-blue-300 transition-all`}
         style={elementStyle}
         onClick={(e) => {
           e.stopPropagation();
           setSelectedElement(element);
+        }}
+        onMouseDown={(e) => {
+          if (!isSelected) {
+            setSelectedElement(element);
+          }
+          handleMouseDown(e, element.id);
         }}
         draggable
         onDragStart={(e) => handleDragStart(e, element.id)}
@@ -490,8 +681,10 @@ export const VisualBuilder = () => {
           />
         )}
 
+        <ResizeHandles element={element} />
+
         {isSelected && (
-          <div className="absolute -top-8 -right-2 flex space-x-1">
+          <div className="absolute -top-8 -right-2 flex space-x-1 z-50">
             <Button
               size="sm"
               variant="secondary"
@@ -629,7 +822,8 @@ export const VisualBuilder = () => {
             style={{ 
               transition: 'max-width 0.3s ease',
               minHeight: '600px',
-              position: 'relative'
+              position: 'relative',
+              userSelect: 'none'
             }}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
