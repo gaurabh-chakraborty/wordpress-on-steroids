@@ -14,13 +14,13 @@ import { Post } from '@/types/admin';
 export const PostManager = () => {
   const { posts, deletePost, updatePost } = useAdmin();
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [isEditing, setIsEditing] = useState(false);
   const [editingPost, setEditingPost] = useState<Post | null>(null);
 
   const filteredPosts = posts.filter(post => {
     const searchMatch = post.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const statusMatch = statusFilter ? post.status === statusFilter : true;
+    const statusMatch = statusFilter === 'all' ? true : post.status === statusFilter;
     return searchMatch && statusMatch;
   });
 
@@ -86,12 +86,12 @@ export const PostManager = () => {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
               />
-              <Select onValueChange={setStatusFilter}>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Statuses</SelectItem>
+                  <SelectItem value="all">All Statuses</SelectItem>
                   <SelectItem value="published">Published</SelectItem>
                   <SelectItem value="draft">Draft</SelectItem>
                   <SelectItem value="pending">Pending</SelectItem>
