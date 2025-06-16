@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
-import { FileText, Plus, Search, Filter, Edit, Trash2, Eye } from 'lucide-react';
+import { FileText, Plus, Search, Filter, Edit, Trash2, Eye, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useAdmin } from '@/context/AdminContext';
 import { PostEditor } from './PostEditor';
 import { Post } from '@/types/admin';
@@ -67,27 +68,26 @@ export const PostManager = () => {
   }
 
   return (
-    <div className="container py-10">
+    <div className="container py-4 px-4 sm:py-10">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle>Posts</CardTitle>
-          <div className="space-x-2">
-            <Button onClick={handleAddNew}>
-              <Plus className="mr-2 h-4 w-4" /> Add Post
-            </Button>
-          </div>
+        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0 pb-4">
+          <CardTitle className="text-xl sm:text-2xl">Posts</CardTitle>
+          <Button onClick={handleAddNew} className="w-full sm:w-auto">
+            <Plus className="mr-2 h-4 w-4" /> Add Post
+          </Button>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col space-y-4">
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
               <Input
                 type="search"
                 placeholder="Search posts..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
+                className="flex-1"
               />
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -98,7 +98,49 @@ export const PostManager = () => {
                 </SelectContent>
               </Select>
             </div>
-            <div className="overflow-x-auto">
+            
+            {/* Mobile Card View */}
+            <div className="block sm:hidden space-y-4">
+              {filteredPosts.map(post => (
+                <Card key={post.id} className="p-4">
+                  <div className="flex flex-col space-y-3">
+                    <div className="flex items-start justify-between">
+                      <h3 className="font-medium text-sm leading-tight flex-1 pr-2">{post.title}</h3>
+                      <Badge variant={getStatusVariant(post.status)} className="text-xs">
+                        {post.status}
+                      </Badge>
+                    </div>
+                    <div className="text-xs text-gray-600 space-y-1">
+                      <p>Author: {post.author}</p>
+                      <p>Tags: {post.tags.join(', ')}</p>
+                      <p>Categories: {post.categories.join(', ')}</p>
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button size="sm" variant="ghost">
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="ghost"
+                        onClick={() => handleEdit(post)}
+                      >
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="ghost"
+                        onClick={() => handleDelete(post.id)}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden sm:block overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>

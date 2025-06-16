@@ -44,31 +44,31 @@ export const PostEditor = ({ post, onBack }: PostEditorProps) => {
   };
 
   return (
-    <div className="container py-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="container py-4 px-4 sm:py-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 space-y-4 sm:space-y-0">
         <div className="flex items-center space-x-4">
           <Button variant="ghost" onClick={onBack}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Posts
           </Button>
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-xl sm:text-2xl font-bold">
             {post ? 'Edit Post' : 'Create New Post'}
           </h1>
         </div>
-        <div className="flex space-x-2">
-          <Button variant="outline">
+        <div className="flex space-x-2 w-full sm:w-auto">
+          <Button variant="outline" className="flex-1 sm:flex-none">
             <Eye className="w-4 h-4 mr-2" />
             Preview
           </Button>
-          <Button onClick={handleSave}>
+          <Button onClick={handleSave} className="flex-1 sm:flex-none">
             <Save className="w-4 h-4 mr-2" />
             Save
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Content</CardTitle>
@@ -78,13 +78,13 @@ export const PostEditor = ({ post, onBack }: PostEditorProps) => {
                 placeholder="Post title..."
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="text-xl font-semibold"
+                className="text-lg sm:text-xl font-semibold"
               />
               <textarea
                 placeholder="Write your post content here..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full h-64 p-3 border border-gray-300 rounded-md resize-none"
+                className="w-full h-48 sm:h-64 p-3 border border-gray-300 rounded-md resize-none text-sm sm:text-base"
               />
               <Input
                 placeholder="Post excerpt (optional)..."
@@ -95,7 +95,7 @@ export const PostEditor = ({ post, onBack }: PostEditorProps) => {
           </Card>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Publish</CardTitle>
