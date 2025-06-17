@@ -41,7 +41,6 @@ export const AdminSidebar = () => {
 
   const appearanceItems = [
     { id: 'themes', label: 'Themes', icon: Palette },
-    { id: 'widgets', label: 'Widgets', icon: Widgets },
     { id: 'menus', label: 'Menus', icon: Menu },
     { id: 'visual-builder', label: 'Visual Builder', icon: Eye },
   ];
