@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { AdminProvider, useAdmin } from '@/context/AdminContext';
 import { AdminSidebar } from './AdminSidebar';
@@ -9,11 +10,19 @@ import { VisualBuilder } from './VisualBuilder';
 import { UserManager } from './UserManager';
 import { MediaLibrary } from './MediaLibrary';
 import { Settings } from './Settings';
+import { WidgetManager } from './WidgetManager';
+import { MenuManager } from './MenuManager';
+import { SystemManager } from './SystemManager';
+import { AdminAuth } from './AdminAuth';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { ThemeManager } from './ThemeManager';
 
 const AdminContent = () => {
-  const { activeSection } = useAdmin();
+  const { activeSection, isAuthenticated, login } = useAdmin();
+
+  if (!isAuthenticated) {
+    return <AdminAuth onLogin={login} />;
+  }
 
   const renderContent = () => {
     switch (activeSection) {
@@ -31,6 +40,12 @@ const AdminContent = () => {
         return <PluginManager />;
       case 'visual-builder':
         return <VisualBuilder />;
+      case 'widgets':
+        return <WidgetManager />;
+      case 'menus':
+        return <MenuManager />;
+      case 'system':
+        return <SystemManager />;
       case 'settings':
         return <Settings />;
       case 'themes':

@@ -2,6 +2,12 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 import { User, Post, Page, Plugin, MediaItem, DashboardStats, Theme, ThemeCustomization } from '@/types/admin';
 
 interface AdminContextType {
+  // Authentication
+  isAuthenticated: boolean;
+  login: (credentials: { username: string; password: string }) => void;
+  logout: () => void;
+  
+  // ... keep existing code (currentUser through mockApiCall properties)
   currentUser: User;
   posts: Post[];
   pages: Page[];
@@ -30,7 +36,6 @@ interface AdminContextType {
   installTheme: (theme: Theme) => void;
   uninstallTheme: (id: string) => void;
   updateThemeCustomization: (customization: ThemeCustomization) => void;
-  // Mock API functions
   mockApiCall: (endpoint: string, data?: any) => Promise<any>;
 }
 
@@ -328,6 +333,30 @@ const mockThemes: Theme[] = [
 ];
 
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
+  // Authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  const login = (credentials: { username: string; password: string }) => {
+    // In a real app, this would validate against a backend
+    if (credentials.username === 'admin' && credentials.password === 'admin123') {
+      setIsAuthenticated(true);
+      localStorage.setItem('adminAuth', 'true');
+    }
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('adminAuth');
+  };
+
+  // Check for existing auth on mount
+  useEffect(() => {
+    const savedAuth = localStorage.getItem('adminAuth');
+    if (savedAuth === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   const [activeSection, setActiveSection] = useState('dashboard');
   const [currentUser] = useState<User>(mockUsers[0]);
   const [posts, setPosts] = useState<Post[]>(mockPosts);
@@ -677,6 +706,9 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AdminContext.Provider value={{
+      isAuthenticated,
+      login,
+      logout,
       currentUser,
       posts,
       pages,
