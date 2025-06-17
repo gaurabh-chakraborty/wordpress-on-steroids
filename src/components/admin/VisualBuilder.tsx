@@ -60,6 +60,7 @@ interface ElementStyle {
   margin?: string;
   borderRadius?: string;
   border?: string;
+  borderLeft?: string;
   backgroundImage?: string;
   backgroundSize?: string;
   backgroundPosition?: string;
@@ -72,6 +73,8 @@ interface ElementStyle {
   fontFamily?: string;
   lineHeight?: string;
   letterSpacing?: string;
+  cursor?: string;
+  fontStyle?: string;
 }
 
 interface Element {
@@ -379,28 +382,30 @@ export const VisualBuilder = () => {
                type === 'spacer' ? '' : '',
       styles: { 
         fontSize: type === 'heading' ? '32px' : type === 'text' ? '16px' : type === 'quote' ? '20px' : undefined,
-        fontWeight: type === 'heading' ? 'bold' : type === 'quote' ? '300' : undefined,
-        color: type === 'text' || type === 'heading' || type === 'quote' ? '#1f2937' : undefined,
+        fontWeight: type === 'heading' ? 'bold' : type === 'quote' ? '300' : type === 'button' ? '600' : undefined,
+        color: type === 'text' || type === 'heading' || type === 'quote' ? '#1f2937' : type === 'button' ? '#ffffff' : undefined,
         backgroundColor: type === 'button' ? '#3b82f6' : 
                         type === 'container' ? '#f9fafb' : 
                         type === 'quote' ? '#f8fafc' : undefined,
         padding: type === 'container' ? '20px' : 
-                type === 'button' ? '12px 24px' : 
+                type === 'button' ? '15px 30px' : 
                 type === 'quote' ? '24px' : 
                 type === 'text' || type === 'heading' ? '10px' : undefined,
-        borderRadius: type === 'button' ? '6px' : type === 'container' ? '8px' : type === 'quote' ? '8px' : undefined,
-        border: type === 'quote' ? '1px solid #e5e7eb' : undefined,
+        borderRadius: type === 'button' ? '8px' : type === 'container' ? '8px' : type === 'quote' ? '8px' : undefined,
+        border: type === 'quote' ? '1px solid #e5e7eb' : type === 'button' ? 'none' : undefined,
         borderLeft: type === 'quote' ? '4px solid #3b82f6' : undefined,
-        textAlign: type === 'heading' || type === 'quote' ? 'center' : undefined,
+        textAlign: type === 'heading' || type === 'quote' ? 'center' : type === 'button' ? 'center' : undefined,
         fontStyle: type === 'quote' ? 'italic' : undefined,
         lineHeight: type === 'text' ? '1.6' : type === 'quote' ? '1.8' : undefined,
-        fontFamily: 'Open Sans, sans-serif'
+        fontFamily: 'Open Sans, sans-serif',
+        cursor: type === 'button' ? 'pointer' : undefined,
+        boxShadow: type === 'button' ? '0 4px 6px rgba(0,0,0,0.1)' : undefined
       },
       position: { x: 100, y: 200 },
       size: { 
         width: type === 'heading' ? 400 : 
                type === 'text' ? 300 : 
-               type === 'button' ? 150 : 
+               type === 'button' ? 200 : 
                type === 'link' ? 200 :
                type === 'container' ? 350 : 
                type === 'image' ? 250 : 
@@ -409,9 +414,9 @@ export const VisualBuilder = () => {
                type === 'list' ? 200 :
                type === 'divider' ? 300 : 
                type === 'spacer' ? 100 : 250, 
-        height: type === 'heading' ? 50 : 
+        height: type === 'heading' ? 60 : 
                 type === 'text' ? 80 : 
-                type === 'button' ? 40 : 
+                type === 'button' ? 50 : 
                 type === 'link' ? 30 :
                 type === 'container' ? 200 : 
                 type === 'image' ? 150 : 
