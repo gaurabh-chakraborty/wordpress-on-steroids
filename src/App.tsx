@@ -22,7 +22,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<AdminPanel />} />
               <Route path="/admin" element={<AdminPanel />} />
               <Route path="/page/:slug" element={<PageViewer />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
