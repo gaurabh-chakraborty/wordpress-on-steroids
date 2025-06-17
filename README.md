@@ -1,73 +1,52 @@
-# Welcome to your Lovable project
+# Admin Verse Builder Kit
 
-## Project info
+## Vision
 
-**URL**: https://lovable.dev/projects/c4319539-f759-4896-9d44-70507acbce7c
+**Admin Verse Builder Kit** is an open source, AI-powered platform designed to revolutionize the way we build CMS and admin dashboard experiences. Our goal is to take the extensibility of WordPress, supercharge it with React, and automate as much of the development as possible using AI large language models (LLMs), aiming for minimal human intervention.
 
-## How can I edit this code?
+## Key Features
 
-There are several ways of editing your application.
+- ⚡️ Modern React-based architecture, replacing legacy PHP frameworks
+- 🤖 AI-driven code and UI component generation
+- 🧩 Modular plugin and theme system inspired by WordPress
+- 🛠️ Automated testing, CI/CD, and code quality enforcement
+- 🌍 Open source, community-driven, and extensible
 
-**Use Lovable**
+## Getting Started
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c4319539-f759-4896-9d44-70507acbce7c) and start prompting.
+1. **Clone the repository**
+   ```sh
+   git clone https://github.com/gaurabh-chakraborty/admin-verse-builder-kit.git
+   cd admin-verse-builder-kit
+   ```
 
-Changes made via Lovable will be committed automatically to this repo.
+2. **Install dependencies**
+   ```sh
+   npm install
+   ```
 
-**Use your preferred IDE**
+3. **Run locally**
+   ```sh
+   npm start
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+4. **Explore AI features**
+   - Use included CLI or web prompts to generate modules/components via LLMs.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+For detailed setup, see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-Follow these steps:
+## Contributing
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+We welcome all contributions! Please read our [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines on how to get involved.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## License
 
-# Step 3: Install the necessary dependencies.
-npm i
+This project is licensed under the MIT License. See [`LICENSE`](LICENSE) for details.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## Community & Support
 
-**Edit a file directly in GitHub**
+- File issues or feature requests in the [issue tracker](https://github.com/gaurabh-chakraborty/admin-verse-builder-kit/issues)
+- For discussions, join our [community forum/Discord]()
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/c4319539-f759-4896-9d44-70507acbce7c) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+---
+Built with ❤️, React, and AI.
