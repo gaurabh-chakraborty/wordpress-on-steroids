@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Puzzle, 
@@ -19,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useAdmin } from '@/context/AdminContext';
 import { Plugin } from '@/types/admin';
+import { PluginSettings } from './PluginSettings';
 
 const iconMap: Record<string, any> = {
   Search: Search,
@@ -32,6 +32,8 @@ export const PluginManager = () => {
   const { plugins, togglePlugin, installPlugin } = useAdmin();
   const [activeTab, setActiveTab] = useState<'installed' | 'available'>('installed');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPlugin, setSelectedPlugin] = useState<Plugin | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
 
   const availablePlugins: Plugin[] = [
     {
@@ -68,6 +70,20 @@ export const PluginManager = () => {
   const handleInstall = (plugin: Plugin) => {
     installPlugin(plugin);
   };
+
+  const handleSettings = (plugin: Plugin) => {
+    setSelectedPlugin(plugin);
+    setShowSettings(true);
+  };
+
+  if (showSettings && selectedPlugin) {
+    return (
+      <PluginSettings 
+        plugin={selectedPlugin}
+        onBack={() => setShowSettings(false)}
+      />
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -172,7 +188,11 @@ export const PluginManager = () => {
                           </>
                         )}
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleSettings(plugin)}
+                      >
                         <Settings className="w-4 h-4" />
                       </Button>
                     </div>
