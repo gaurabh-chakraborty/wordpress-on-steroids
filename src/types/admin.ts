@@ -1,4 +1,3 @@
-
 export interface User {
   id: string;
   username: string;
@@ -71,4 +70,54 @@ export interface Activity {
   description: string;
   timestamp: string;
   user: string;
+}
+
+export interface Theme {
+  id: string;
+  name: string;
+  description: string;
+  version: string;
+  author: string;
+  isActive: boolean;
+  isInstalled: boolean;
+  screenshot: string;
+  tags: string[];
+  features: string[];
+  customization: {
+    colors: {
+      primary: string;
+      secondary: string;
+      accent: string;
+    };
+    typography: {
+      headingFont: string;
+      bodyFont: string;
+    };
+    layout: {
+      containerWidth: string;
+      headerStyle: string;
+    };
+  };
+  demoContent?: {
+    pages: Partial<Page>[];
+    posts: Partial<Post>[];
+    media: Partial<MediaItem>[];
+  };
+}
+
+export interface ThemeCustomization {
+  themeId: string;
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+  };
+  typography: {
+    headingFont: string;
+    bodyFont: string;
+  };
+  layout: {
+    containerWidth: string;
+    headerStyle: string;
+  };
 }

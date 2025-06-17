@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AdminProvider, useAdmin } from '@/context/AdminContext';
 import { AdminSidebar } from './AdminSidebar';
@@ -11,6 +10,7 @@ import { UserManager } from './UserManager';
 import { MediaLibrary } from './MediaLibrary';
 import { Settings } from './Settings';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { ThemeManager } from './ThemeManager';
 
 const AdminContent = () => {
   const { activeSection } = useAdmin();
@@ -33,6 +33,8 @@ const AdminContent = () => {
         return <VisualBuilder />;
       case 'settings':
         return <Settings />;
+      case 'themes':
+        return <ThemeManager />;
       default:
         return <Dashboard />;
     }

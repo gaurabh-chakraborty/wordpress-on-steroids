@@ -1,6 +1,5 @@
-
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { User, Post, Page, Plugin, MediaItem, DashboardStats } from '@/types/admin';
+import { User, Post, Page, Plugin, MediaItem, DashboardStats, Theme, ThemeCustomization } from '@/types/admin';
 
 interface AdminContextType {
   currentUser: User;
@@ -25,6 +24,12 @@ interface AdminContextType {
   installPlugin: (plugin: Plugin) => void;
   uploadMedia: (file: File) => Promise<MediaItem>;
   deleteMedia: (id: string) => void;
+  themes: Theme[];
+  activeTheme: Theme | null;
+  activateTheme: (id: string) => void;
+  installTheme: (theme: Theme) => void;
+  uninstallTheme: (id: string) => void;
+  updateThemeCustomization: (customization: ThemeCustomization) => void;
   // Mock API functions
   mockApiCall: (endpoint: string, data?: any) => Promise<any>;
 }
@@ -246,6 +251,82 @@ const mockMedia: MediaItem[] = [
   }
 ];
 
+const mockThemes: Theme[] = [
+  {
+    id: '1',
+    name: 'Default Theme',
+    description: 'Clean and modern default theme with responsive design',
+    version: '1.0.0',
+    author: 'Lovable Team',
+    isActive: true,
+    isInstalled: true,
+    screenshot: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop',
+    tags: ['default', 'responsive', 'clean'],
+    features: ['Responsive Design', 'Dark Mode Support', 'SEO Optimized', 'Fast Loading'],
+    customization: {
+      colors: { primary: '#3b82f6', secondary: '#6b7280', accent: '#10b981' },
+      typography: { headingFont: 'Inter', bodyFont: 'Inter' },
+      layout: { containerWidth: '1200px', headerStyle: 'modern' }
+    }
+  },
+  {
+    id: '2',
+    name: 'Blog Master',
+    description: 'Perfect theme for bloggers with beautiful typography and reading experience',
+    version: '2.0.1',
+    author: 'Blog Themes Co',
+    isActive: false,
+    isInstalled: true,
+    screenshot: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&h=400&fit=crop',
+    tags: ['blog', 'typography', 'reading'],
+    features: ['Beautiful Typography', 'Reading Mode', 'Social Sharing', 'Comment System'],
+    customization: {
+      colors: { primary: '#1f2937', secondary: '#6b7280', accent: '#f59e0b' },
+      typography: { headingFont: 'Merriweather', bodyFont: 'Georgia' },
+      layout: { containerWidth: '800px', headerStyle: 'classic' }
+    },
+    demoContent: {
+      pages: [
+        { title: 'Blog Home', content: 'Welcome to our amazing blog.', slug: 'blog-home', template: 'default' },
+        { title: 'About the Author', content: 'Learn more about the blog author.', slug: 'about-author', template: 'default' }
+      ],
+      posts: [
+        { title: 'Getting Started with Blogging', content: 'A comprehensive guide to start your blogging journey.', excerpt: 'Everything you need to know about blogging.' },
+        { title: 'Writing Tips for Beginners', content: 'Essential writing tips for new bloggers.', excerpt: 'Improve your writing skills with these tips.' }
+      ],
+      media: []
+    }
+  },
+  {
+    id: '3',
+    name: 'E-Commerce Pro',
+    description: 'Professional e-commerce theme with product showcases and shopping cart',
+    version: '3.1.0',
+    author: 'Commerce Solutions',
+    isActive: false,
+    isInstalled: true,
+    screenshot: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop',
+    tags: ['ecommerce', 'shop', 'product'],
+    features: ['Product Gallery', 'Shopping Cart', 'Payment Integration', 'Inventory Management'],
+    customization: {
+      colors: { primary: '#059669', secondary: '#6b7280', accent: '#dc2626' },
+      typography: { headingFont: 'Roboto', bodyFont: 'Open Sans' },
+      layout: { containerWidth: '1400px', headerStyle: 'modern' }
+    },
+    demoContent: {
+      pages: [
+        { title: 'Shop', content: 'Browse our amazing products.', slug: 'shop', template: 'full-width' },
+        { title: 'Cart', content: 'Your shopping cart items.', slug: 'cart', template: 'default' }
+      ],
+      posts: [
+        { title: 'New Product Launch', content: 'Exciting new products now available.', excerpt: 'Check out our latest products.' },
+        { title: 'Sale Event', content: 'Limited time offers on selected items.', excerpt: 'Don\'t miss our special offers.' }
+      ],
+      media: []
+    }
+  }
+];
+
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [currentUser] = useState<User>(mockUsers[0]);
@@ -253,6 +334,8 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [pages, setPages] = useState<Page[]>(mockPages);
   const [users, setUsers] = useState<User[]>(mockUsers);
   const [media, setMedia] = useState<MediaItem[]>(mockMedia);
+  const [themes, setThemes] = useState<Theme[]>(mockThemes);
+  const [activeTheme, setActiveTheme] = useState<Theme | null>(mockThemes[0]);
 
   const [plugins, setPlugins] = useState<Plugin[]>([
     {
@@ -544,6 +627,54 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     return () => clearInterval(interval);
   }, [users]);
 
+  const activateTheme = (id: string) => {
+    setThemes(prev => prev.map(theme => ({
+      ...theme,
+      isActive: theme.id === id
+    })));
+    
+    const theme = themes.find(t => t.id === id);
+    if (theme) {
+      setActiveTheme(theme);
+    }
+    
+    mockApiCall(`/api/themes/${id}/activate`);
+  };
+
+  const installTheme = (theme: Theme) => {
+    setThemes(prev => prev.map(t =>
+      t.id === theme.id ? { ...t, isInstalled: true } : t
+    ));
+    mockApiCall(`/api/themes/${theme.id}/install`);
+  };
+
+  const uninstallTheme = (id: string) => {
+    setThemes(prev => prev.map(theme =>
+      theme.id === id ? { ...theme, isInstalled: false, isActive: false } : theme
+    ));
+    
+    if (activeTheme?.id === id) {
+      const defaultTheme = themes.find(t => t.id === '1');
+      setActiveTheme(defaultTheme || null);
+    }
+    
+    mockApiCall(`/api/themes/${id}/uninstall`);
+  };
+
+  const updateThemeCustomization = (customization: ThemeCustomization) => {
+    setThemes(prev => prev.map(theme =>
+      theme.id === customization.themeId
+        ? { ...theme, customization }
+        : theme
+    ));
+    
+    if (activeTheme?.id === customization.themeId) {
+      setActiveTheme(prev => prev ? { ...prev, customization } : null);
+    }
+    
+    mockApiCall(`/api/themes/${customization.themeId}/customize`, customization);
+  };
+
   return (
     <AdminContext.Provider value={{
       currentUser,
@@ -568,6 +699,12 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       installPlugin,
       uploadMedia,
       deleteMedia,
+      themes,
+      activeTheme,
+      activateTheme,
+      installTheme,
+      uninstallTheme,
+      updateThemeCustomization,
       mockApiCall
     }}>
       {children}
