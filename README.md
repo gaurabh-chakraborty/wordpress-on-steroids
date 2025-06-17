@@ -1,8 +1,7 @@
-# Admin Verse Builder Kit
-
+# Wordpress On Steroids/
 ## Vision
 
-**Admin Verse Builder Kit** is an open source, AI-powered platform designed to revolutionize the way we build CMS and admin dashboard experiences. Our goal is to take the extensibility of WordPress, supercharge it with React, and automate as much of the development as possible using AI large language models (LLMs), aiming for minimal human intervention.
+**Wordpress On Steroids** is an open source, AI-powered platform designed to revolutionize the way we build CMS and admin dashboard experiences. Our goal is to take the extensibility of WordPress, supercharge it with React, and automate as much of the development as possible using AI large language models (LLMs), aiming for minimal human intervention.
 
 ## Key Features
 
@@ -16,8 +15,8 @@
 
 1. **Clone the repository**
    ```sh
-   git clone https://github.com/gaurabh-chakraborty/admin-verse-builder-kit.git
-   cd admin-verse-builder-kit
+   git clone https://github.com/gaurabh-chakraborty/wordpress-on-steroids.git
+   cd wordpress-on-steroids
    ```
 
 2. **Install dependencies**
@@ -45,7 +44,7 @@ This project is licensed under the MIT License. See [`LICENSE`](LICENSE) for det
 
 ## Community & Support
 
-- File issues or feature requests in the [issue tracker](https://github.com/gaurabh-chakraborty/admin-verse-builder-kit/issues)
+- File issues or feature requests in the [issue tracker](https://github.com/gaurabh-chakraborty/wordpress-on-steroids/issues)
 - For discussions, join our [community forum/Discord]()
 
 ---
