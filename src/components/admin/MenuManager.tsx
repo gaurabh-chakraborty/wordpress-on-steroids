@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -68,9 +67,9 @@ export const MenuManager = () => {
   ];
 
   const linkTypes = [
-    { value: 'page', label: 'Page', icon: FileText },
-    { value: 'custom', label: 'Custom Link', icon: Link },
-    { value: 'external', label: 'External Link', icon: ExternalLink }
+    { value: 'page', label: 'Page', icon: FileText, type: 'page' },
+    { value: 'custom', label: 'Custom Link', icon: Link, type: 'custom' },
+    { value: 'external', label: 'External Link', icon: ExternalLink, type: 'external' }
   ];
 
   const handleCreateMenu = () => {

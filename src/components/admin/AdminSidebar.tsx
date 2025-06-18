@@ -9,7 +9,7 @@ import {
   Puzzle, 
   Eye, 
   Palette,
-  Widgets,
+  Grid3X3,
   Menu,
   Server,
   LogOut
