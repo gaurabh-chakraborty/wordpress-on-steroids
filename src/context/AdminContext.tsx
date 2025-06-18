@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User, Post, Page, Plugin, MediaItem, DashboardStats, Theme, ThemeCustomization } from '@/types/admin';
 import { Product, Order, Customer, Category, Coupon } from '@/types/ecommerce';
@@ -398,6 +399,74 @@ const mockProducts: Product[] = [
   }
 ];
 
+const mockPlugins: Plugin[] = [
+  {
+    id: '1',
+    name: 'SEO Optimizer Pro',
+    description: 'Advanced SEO optimization with keyword analysis, meta tag management, and search engine indexing.',
+    version: '2.1.0',
+    author: 'SEO Team',
+    isActive: true,
+    isInstalled: true,
+    icon: 'Search',
+    settings: {
+      autoOptimize: true,
+      keywordDensity: 2.5,
+      enableSitemap: true
+    }
+  },
+  {
+    id: '2',
+    name: 'Contact Form Builder',
+    description: 'Build beautiful, responsive contact forms with drag-and-drop interface and spam protection.',
+    version: '3.0.1',
+    author: 'Form Builder Inc',
+    isActive: false,
+    isInstalled: true,
+    icon: 'Mail',
+    settings: {
+      enableCaptcha: true,
+      emailNotifications: true,
+      customStyling: false
+    }
+  },
+  {
+    id: '3',
+    name: 'Social Media Share',
+    description: 'Add customizable social media sharing buttons with analytics and multiple platform support.',
+    version: '1.8.3',
+    author: 'Social Team',
+    isActive: true,
+    isInstalled: true,
+    icon: 'Share2',
+    settings: {
+      platforms: ['facebook', 'twitter', 'linkedin'],
+      showCounts: true,
+      position: 'bottom'
+    }
+  },
+  {
+    id: '4',
+    name: 'Advanced Analytics',
+    description: 'Comprehensive website analytics with visitor tracking, conversion monitoring, and detailed reports.',
+    version: '4.2.0',
+    author: 'Analytics Pro',
+    isActive: false,
+    isInstalled: true,
+    icon: 'BarChart3'
+  },
+  {
+    id: '5',
+    name: 'E-commerce Suite',
+    description: 'Complete e-commerce solution with product management, payment processing, and inventory tracking.',
+    version: '5.1.2',
+    author: 'Commerce Solutions',
+    isActive: false,
+    isInstalled: false,
+    icon: 'ShoppingCart'
+  }
+];
+
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
   // Authentication state with persistence
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -429,6 +498,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [posts, setPosts] = useState<Post[]>(mockPosts);
   const [pages, setPages] = useState<Page[]>(mockPages);
   const [users, setUsers] = useState<User[]>(mockUsers);
+  const [plugins, setPlugins] = useState<Plugin[]>(mockPlugins);
   const [media, setMedia] = useState<MediaItem[]>(mockMedia);
   const [themes, setThemes] = useState<Theme[]>(mockThemes);
   const [activeTheme, setActiveTheme] = useState<Theme | null>(mockThemes[0]);
