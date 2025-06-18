@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User, Post, Page, Plugin, MediaItem, DashboardStats, Theme, ThemeCustomization } from '@/types/admin';
+import { Product, Order, Customer, Category, Coupon } from '@/types/ecommerce';
+import { Widget, WidgetType } from '@/types/widgets';
+import { dataService } from '@/services/dataService';
 
 interface AdminContextType {
   // Authentication
@@ -37,6 +40,23 @@ interface AdminContextType {
   uninstallTheme: (id: string) => void;
   updateThemeCustomization: (customization: ThemeCustomization) => void;
   mockApiCall: (endpoint: string, data?: any) => Promise<any>;
+  
+  // E-commerce
+  products: Product[];
+  orders: Order[];
+  customers: Customer[];
+  categories: Category[];
+  coupons: Coupon[];
+  createProduct: (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  updateProduct: (id: string, updates: Partial<Product>) => void;
+  deleteProduct: (id: string) => void;
+  
+  // Widgets
+  widgets: Widget[];
+  widgetTypes: WidgetType[];
+  createWidget: (widget: Omit<Widget, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  updateWidget: (id: string, updates: Partial<Widget>) => void;
+  deleteWidget: (id: string) => void;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
@@ -332,21 +352,68 @@ const mockThemes: Theme[] = [
   }
 ];
 
+const mockWidgetTypes: WidgetType[] = [
+  {
+    id: 'text',
+    name: 'Text Widget',
+    description: 'Simple text content widget',
+    category: 'Content',
+    icon: 'Type',
+    defaultContent: { text: 'Enter your text here...' },
+    settingsSchema: [
+      { key: 'text', label: 'Text Content', type: 'textarea', defaultValue: '', required: true }
+    ]
+  },
+  {
+    id: 'image',
+    name: 'Image Widget',
+    description: 'Display images with optional captions',
+    category: 'Media',
+    icon: 'Image',
+    defaultContent: { src: '', alt: '', caption: '' },
+    settingsSchema: [
+      { key: 'src', label: 'Image URL', type: 'image', defaultValue: '', required: true },
+      { key: 'alt', label: 'Alt Text', type: 'text', defaultValue: '' },
+      { key: 'caption', label: 'Caption', type: 'text', defaultValue: '' }
+    ]
+  }
+];
+
+const mockProducts: Product[] = [
+  {
+    id: '1',
+    name: 'Premium Wireless Headphones',
+    description: 'High-quality wireless headphones with noise cancellation',
+    price: 299.99,
+    salePrice: 249.99,
+    sku: 'WH-001',
+    stock: 45,
+    category: 'Electronics',
+    tags: ['wireless', 'audio', 'premium'],
+    images: ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop'],
+    status: 'active',
+    type: 'simple',
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
+  }
+];
+
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
-  // Authentication state
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Authentication state with persistence
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => dataService.load('adminAuth', false)
+  );
   
   const login = (credentials: { username: string; password: string }) => {
-    // In a real app, this would validate against a backend
     if (credentials.username === 'admin' && credentials.password === 'admin123') {
       setIsAuthenticated(true);
-      localStorage.setItem('adminAuth', 'true');
+      dataService.save('adminAuth', true);
     }
   };
 
   const logout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem('adminAuth');
+    dataService.save('adminAuth', false);
   };
 
   // Check for existing auth on mount
@@ -704,6 +771,50 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     mockApiCall(`/api/themes/${customization.themeId}/customize`, customization);
   };
 
+  const createProduct = (productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const newProduct: Product = {
+      ...productData,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    setProducts(prev => [newProduct, ...prev]);
+  };
+
+  const updateProduct = (id: string, updates: Partial<Product>) => {
+    setProducts(prev => prev.map(product => 
+      product.id === id 
+        ? { ...product, ...updates, updatedAt: new Date().toISOString() }
+        : product
+    ));
+  };
+
+  const deleteProduct = (id: string) => {
+    setProducts(prev => prev.filter(product => product.id !== id));
+  };
+
+  const createWidget = (widgetData: Omit<Widget, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const newWidget: Widget = {
+      ...widgetData,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    setWidgets(prev => [...prev, newWidget]);
+  };
+
+  const updateWidget = (id: string, updates: Partial<Widget>) => {
+    setWidgets(prev => prev.map(widget => 
+      widget.id === id 
+        ? { ...widget, ...updates, updatedAt: new Date().toISOString() }
+        : widget
+    ));
+  };
+
+  const deleteWidget = (id: string) => {
+    setWidgets(prev => prev.filter(widget => widget.id !== id));
+  };
+
   return (
     <AdminContext.Provider value={{
       isAuthenticated,
@@ -737,7 +848,20 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       installTheme,
       uninstallTheme,
       updateThemeCustomization,
-      mockApiCall
+      mockApiCall,
+      products,
+      orders,
+      customers,
+      categories,
+      coupons,
+      createProduct,
+      updateProduct,
+      deleteProduct,
+      widgets,
+      widgetTypes,
+      createWidget,
+      updateWidget,
+      deleteWidget
     }}>
       {children}
     </AdminContext.Provider>
