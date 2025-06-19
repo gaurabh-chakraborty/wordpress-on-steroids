@@ -6,9 +6,9 @@ import {
   createPlugins
 } from '@udecode/plate-common';
 import { createParagraphPlugin } from '@udecode/plate-paragraph';
-import { createBoldPlugin, createItalicPlugin, createUnderlinePlugin } from '@udecode/plate-basic-marks';
-import { createListPlugin } from '@udecode/plate-list';
-import { createLinkPlugin } from '@udecode/plate-link';
+import { BaseBoldPlugin, BaseItalicPlugin, BaseUnderlinePlugin } from '@udecode/plate-basic-marks';
+import { BaseListPlugin } from '@udecode/plate-list';
+import { BaseLinkPlugin } from '@udecode/plate-link';
 import { Card } from '@/components/ui/card';
 
 interface PlateEditorProps {
@@ -19,11 +19,11 @@ interface PlateEditorProps {
 
 const plugins = createPlugins([
   createParagraphPlugin(),
-  createBoldPlugin(),
-  createItalicPlugin(),
-  createUnderlinePlugin(),
-  createListPlugin(),
-  createLinkPlugin(),
+  BaseBoldPlugin,
+  BaseItalicPlugin,
+  BaseUnderlinePlugin,
+  BaseListPlugin,
+  BaseLinkPlugin,
 ]);
 
 export const PlateEditor: React.FC<PlateEditorProps> = ({
