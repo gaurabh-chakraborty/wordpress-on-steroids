@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { 
   Plus, 
@@ -16,8 +15,8 @@ import {
   Calendar,
   CheckSquare,
   ToggleLeft,
-  Slider as SliderIcon,
-  Separator as SeparatorIcon,
+  Sliders as SliderIcon,
+  Minus as SeparatorIcon,
   Table as TableIcon,
   Layout,
   Menu,
