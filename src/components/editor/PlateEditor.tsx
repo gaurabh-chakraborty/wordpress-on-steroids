@@ -1,13 +1,17 @@
 
 import React from 'react';
-import { Plate, PlateProvider, createPlugins } from '@udecode/plate-common';
-import { createParagraphPlugin } from '@udecode/plate-paragraph';
-import { createHeadingPlugin } from '@udecode/plate-heading';
-import { createBoldPlugin, createItalicPlugin, createUnderlinePlugin } from '@udecode/plate-basic-marks';
-import { createListPlugin } from '@udecode/plate-list';
-import { createLinkPlugin } from '@udecode/plate-link';
-import { createImagePlugin } from '@udecode/plate-image';
-import { serializeHtml } from '@udecode/plate-serializer-html';
+import { 
+  Plate, 
+  PlateProvider,
+  createPlugins,
+  ParagraphPlugin,
+  HeadingPlugin,
+  BoldPlugin,
+  ItalicPlugin,
+  UnderlinePlugin,
+  ListPlugin,
+  LinkPlugin
+} from '@udecode/plate-common';
 import { Card } from '@/components/ui/card';
 
 interface PlateEditorProps {
@@ -17,14 +21,13 @@ interface PlateEditorProps {
 }
 
 const plugins = createPlugins([
-  createParagraphPlugin(),
-  createHeadingPlugin(),
-  createBoldPlugin(),
-  createItalicPlugin(),
-  createUnderlinePlugin(),
-  createListPlugin(),
-  createLinkPlugin(),
-  createImagePlugin(),
+  ParagraphPlugin,
+  HeadingPlugin,
+  BoldPlugin,
+  ItalicPlugin,
+  UnderlinePlugin,
+  ListPlugin,
+  LinkPlugin,
 ]);
 
 export const PlateEditor: React.FC<PlateEditorProps> = ({

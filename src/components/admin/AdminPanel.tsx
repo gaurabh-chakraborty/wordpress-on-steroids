@@ -18,6 +18,7 @@ import { ThemeManager } from './ThemeManager';
 import { OrderManager } from './OrderManager';
 import { CustomerManager } from './CustomerManager';
 import { PaymentManager } from './PaymentManager';
+import { ProductManager } from './ProductManager';
 
 const AdminContent = () => {
   const { activeSection, isAuthenticated, login } = useAdmin();

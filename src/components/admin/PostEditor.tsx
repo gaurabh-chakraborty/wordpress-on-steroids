@@ -22,7 +22,7 @@ export const PostEditor = ({ post, onBack }: PostEditorProps) => {
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || '');
   const [excerpt, setExcerpt] = useState(post?.excerpt || '');
-  const [status, setStatus] = useState(post?.status || 'draft');
+  const [status, setStatus] = useState<'published' | 'draft' | 'pending'>(post?.status || 'draft');
   const [tags, setTags] = useState(post?.tags.join(', ') || '');
   const [categories, setCategories] = useState(post?.categories.join(', ') || '');
   const [featuredImage, setFeaturedImage] = useState(post?.featuredImage || '');
@@ -58,6 +58,10 @@ export const PostEditor = ({ post, onBack }: PostEditorProps) => {
       .map(node => node.children?.map((child: any) => child.text).join('') || '')
       .join('\n');
     setContent(textContent);
+  };
+
+  const handleStatusChange = (value: string) => {
+    setStatus(value as 'published' | 'draft' | 'pending');
   };
 
   return (
@@ -140,7 +144,7 @@ export const PostEditor = ({ post, onBack }: PostEditorProps) => {
               <CardContent className="space-y-4">
                 <div>
                   <Label htmlFor="status">Status</Label>
-                  <Select value={status} onValueChange={setStatus}>
+                  <Select value={status} onValueChange={handleStatusChange}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
