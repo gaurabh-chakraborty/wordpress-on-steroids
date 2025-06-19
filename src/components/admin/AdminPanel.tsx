@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AdminProvider, useAdmin } from '@/context/AdminContext';
 import { AdminSidebar } from './AdminSidebar';
@@ -16,6 +15,9 @@ import { SystemManager } from './SystemManager';
 import { AdminAuth } from './AdminAuth';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { ThemeManager } from './ThemeManager';
+import { OrderManager } from './OrderManager';
+import { CustomerManager } from './CustomerManager';
+import { PaymentManager } from './PaymentManager';
 
 const AdminContent = () => {
   const { activeSection, isAuthenticated, login } = useAdmin();
@@ -50,6 +52,14 @@ const AdminContent = () => {
         return <Settings />;
       case 'themes':
         return <ThemeManager />;
+      case 'products':
+        return <ProductManager />;
+      case 'orders':
+        return <OrderManager />;
+      case 'customers':
+        return <CustomerManager />;
+      case 'payments':
+        return <PaymentManager />;
       default:
         return <Dashboard />;
     }

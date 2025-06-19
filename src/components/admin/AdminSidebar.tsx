@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   LayoutDashboard, 
@@ -12,7 +11,10 @@ import {
   Grid3X3,
   Menu,
   Server,
-  LogOut
+  LogOut,
+  Package,
+  ShoppingCart,
+  CreditCard
 } from 'lucide-react';
 import {
   Sidebar,
@@ -37,6 +39,13 @@ export const AdminSidebar = () => {
     { id: 'posts', label: 'Posts', icon: FileText },
     { id: 'pages', label: 'Pages', icon: FileText },
     { id: 'media', label: 'Media Library', icon: Image },
+  ];
+
+  const ecommerceItems = [
+    { id: 'products', label: 'Products', icon: Package },
+    { id: 'orders', label: 'Orders', icon: ShoppingCart },
+    { id: 'customers', label: 'Customers', icon: Users },
+    { id: 'payments', label: 'Payments', icon: CreditCard },
   ];
 
   const appearanceItems = [
@@ -72,6 +81,26 @@ export const AdminSidebar = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               {mainMenuItems.map((item) => (
+                <SidebarMenuItem key={item.id}>
+                  <SidebarMenuButton
+                    onClick={() => setActiveSection(item.id)}
+                    isActive={activeSection === item.id}
+                    className="w-full"
+                  >
+                    <item.icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>E-commerce</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {ecommerceItems.map((item) => (
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton
                     onClick={() => setActiveSection(item.id)}

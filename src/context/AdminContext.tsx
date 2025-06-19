@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User, Post, Page, Plugin, MediaItem, DashboardStats, Theme, ThemeCustomization } from '@/types/admin';
 import { Product, Order, Customer, Category, Coupon } from '@/types/ecommerce';
@@ -384,18 +383,255 @@ const mockProducts: Product[] = [
   {
     id: '1',
     name: 'Premium Wireless Headphones',
-    description: 'High-quality wireless headphones with noise cancellation',
+    description: 'High-quality wireless headphones with noise cancellation and superior sound quality. Perfect for music lovers and professionals.',
     price: 299.99,
     salePrice: 249.99,
     sku: 'WH-001',
     stock: 45,
     category: 'Electronics',
-    tags: ['wireless', 'audio', 'premium'],
+    tags: ['wireless', 'audio', 'premium', 'noise-cancelling'],
     images: ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop'],
     status: 'active',
     type: 'simple',
+    weight: 0.5,
+    dimensions: { length: 20, width: 18, height: 8 },
     createdAt: '2024-01-01T00:00:00Z',
     updatedAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: '2',
+    name: 'Smart Watch Pro',
+    description: 'Advanced smartwatch with health monitoring, GPS tracking, and 7-day battery life.',
+    price: 399.99,
+    sku: 'SW-002',
+    stock: 23,
+    category: 'Electronics',
+    tags: ['smartwatch', 'fitness', 'health', 'gps'],
+    images: ['https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop'],
+    status: 'active',
+    type: 'variable',
+    weight: 0.3,
+    variants: [
+      {
+        id: 'v1',
+        attributes: { color: 'Black', size: '42mm' },
+        price: 399.99,
+        sku: 'SW-002-BK-42',
+        stock: 12
+      },
+      {
+        id: 'v2',
+        attributes: { color: 'Silver', size: '46mm' },
+        price: 429.99,
+        sku: 'SW-002-SL-46',
+        stock: 11
+      }
+    ],
+    createdAt: '2024-01-02T00:00:00Z',
+    updatedAt: '2024-01-02T00:00:00Z'
+  },
+  {
+    id: '3',
+    name: 'Ergonomic Office Chair',
+    description: 'Professional ergonomic office chair with lumbar support and adjustable height.',
+    price: 450.00,
+    sku: 'OC-003',
+    stock: 12,
+    category: 'Furniture',
+    tags: ['office', 'ergonomic', 'chair', 'furniture'],
+    images: ['https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=300&fit=crop'],
+    status: 'active',
+    type: 'simple',
+    weight: 25.0,
+    dimensions: { length: 70, width: 70, height: 120 },
+    createdAt: '2024-01-03T00:00:00Z',
+    updatedAt: '2024-01-03T00:00:00Z'
+  }
+];
+
+const mockOrders: Order[] = [
+  {
+    id: '1',
+    orderNumber: 'ORD-001',
+    customerId: '1',
+    customerEmail: 'john.doe@example.com',
+    status: 'delivered',
+    items: [
+      {
+        id: '1',
+        productId: '1',
+        name: 'Premium Wireless Headphones',
+        price: 249.99,
+        quantity: 1,
+        total: 249.99
+      }
+    ],
+    subtotal: 249.99,
+    tax: 22.50,
+    shipping: 15.00,
+    total: 287.49,
+    billingAddress: {
+      firstName: 'John',
+      lastName: 'Doe',
+      address1: '123 Main St',
+      city: 'New York',
+      state: 'NY',
+      postalCode: '10001',
+      country: 'US'
+    },
+    shippingAddress: {
+      firstName: 'John',
+      lastName: 'Doe',
+      address1: '123 Main St',
+      city: 'New York',
+      state: 'NY',
+      postalCode: '10001',
+      country: 'US'
+    },
+    paymentMethod: 'Credit Card',
+    paymentStatus: 'paid',
+    createdAt: '2024-01-10T00:00:00Z',
+    updatedAt: '2024-01-15T00:00:00Z'
+  },
+  {
+    id: '2',
+    orderNumber: 'ORD-002',
+    customerId: '2',
+    customerEmail: 'jane.smith@example.com',
+    status: 'processing',
+    items: [
+      {
+        id: '2',
+        productId: '2',
+        name: 'Smart Watch Pro',
+        price: 399.99,
+        quantity: 1,
+        total: 399.99
+      }
+    ],
+    subtotal: 399.99,
+    tax: 36.00,
+    shipping: 15.00,
+    total: 450.99,
+    billingAddress: {
+      firstName: 'Jane',
+      lastName: 'Smith',
+      address1: '456 Oak Ave',
+      city: 'Los Angeles',
+      state: 'CA',
+      postalCode: '90210',
+      country: 'US'
+    },
+    shippingAddress: {
+      firstName: 'Jane',
+      lastName: 'Smith',
+      address1: '456 Oak Ave',
+      city: 'Los Angeles',
+      state: 'CA',
+      postalCode: '90210',
+      country: 'US'
+    },
+    paymentMethod: 'PayPal',
+    pay mentStatus: 'paid',
+    createdAt: '2024-01-12T00:00:00Z',
+    updatedAt: '2024-01-12T00:00:00Z'
+  }
+];
+
+const mockCustomers: Customer[] = [
+  {
+    id: '1',
+    email: 'john.doe@example.com',
+    firstName: 'John',
+    lastName: 'Doe',
+    phone: '+1-555-0123',
+    billingAddress: {
+      firstName: 'John',
+      lastName: 'Doe',
+      address1: '123 Main St',
+      city: 'New York',
+      state: 'NY',
+      postalCode: '10001',
+      country: 'US'
+    },
+    orders: ['1'],
+    totalSpent: 287.49,
+    createdAt: '2024-01-01T00:00:00Z',
+    lastOrderAt: '2024-01-10T00:00:00Z'
+  },
+  {
+    id: '2',
+    email: 'jane.smith@example.com',
+    firstName: 'Jane',
+    lastName: 'Smith',
+    phone: '+1-555-0456',
+    orders: ['2'],
+    totalSpent: 450.99,
+    createdAt: '2024-01-05T00:00:00Z',
+    lastOrderAt: '2024-01-12T00:00:00Z'
+  },
+  {
+    id: '3',
+    email: 'bob.wilson@example.com',
+    firstName: 'Bob',
+    lastName: 'Wilson',
+    orders: [],
+    totalSpent: 0,
+    createdAt: '2024-01-08T00:00:00Z'
+  }
+];
+
+const mockCategories: Category[] = [
+  {
+    id: '1',
+    name: 'Electronics',
+    slug: 'electronics',
+    description: 'Electronic devices and gadgets',
+    image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=300&h=200&fit=crop',
+    count: 2
+  },
+  {
+    id: '2',
+    name: 'Furniture',
+    slug: 'furniture',
+    description: 'Home and office furniture',
+    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop',
+    count: 1
+  },
+  {
+    id: '3',
+    name: 'Clothing',
+    slug: 'clothing',
+    description: 'Fashion and apparel',
+    count: 0
+  }
+];
+
+const mockCoupons: Coupon[] = [
+  {
+    id: '1',
+    code: 'WELCOME10',
+    type: 'percentage',
+    amount: 10,
+    description: 'Welcome discount for new customers',
+    minAmount: 50,
+    usageLimit: 100,
+    usedCount: 25,
+    isActive: true,
+    createdAt: '2024-01-01T00:00:00Z'
+  },
+  {
+    id: '2',
+    code: 'SAVE50',
+    type: 'fixed',
+    amount: 50,
+    description: 'Fixed $50 discount on orders over $200',
+    minAmount: 200,
+    usageLimit: 50,
+    usedCount: 12,
+    expiryDate: '2024-12-31T23:59:59Z',
+    isActive: true,
+    createdAt: '2024-01-15T00:00:00Z'
   }
 ];
 
@@ -468,7 +704,7 @@ const mockPlugins: Plugin[] = [
 ];
 
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
-  // Authentication state with persistence
+  // Authentication state with enhanced persistence
   const [isAuthenticated, setIsAuthenticated] = useState(
     () => dataService.load('adminAuth', false)
   );
@@ -487,28 +723,109 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
 
   // Check for existing auth on mount
   useEffect(() => {
-    const savedAuth = localStorage.getItem('adminAuth');
-    if (savedAuth === 'true') {
+    const savedAuth = dataService.load('adminAuth', false);
+    if (savedAuth) {
       setIsAuthenticated(true);
     }
   }, []);
 
   const [activeSection, setActiveSection] = useState('dashboard');
   const [currentUser] = useState<User>(mockUsers[0]);
-  const [posts, setPosts] = useState<Post[]>(mockPosts);
-  const [pages, setPages] = useState<Page[]>(mockPages);
-  const [users, setUsers] = useState<User[]>(mockUsers);
-  const [plugins, setPlugins] = useState<Plugin[]>(mockPlugins);
-  const [media, setMedia] = useState<MediaItem[]>(mockMedia);
-  const [themes, setThemes] = useState<Theme[]>(mockThemes);
-  const [activeTheme, setActiveTheme] = useState<Theme | null>(mockThemes[0]);
-  const [products, setProducts] = useState<Product[]>(mockProducts);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [coupons, setCoupons] = useState<Coupon[]>([]);
-  const [widgets, setWidgets] = useState<Widget[]>([]);
+  
+  // Enhanced state management with persistence
+  const [posts, setPosts] = useState<Post[]>(() => 
+    dataService.load('posts', mockPosts)
+  );
+  const [pages, setPages] = useState<Page[]>(() => 
+    dataService.load('pages', mockPages)
+  );
+  const [users, setUsers] = useState<User[]>(() => 
+    dataService.load('users', mockUsers)
+  );
+  const [plugins, setPlugins] = useState<Plugin[]>(() => 
+    dataService.load('plugins', mockPlugins)
+  );
+  const [media, setMedia] = useState<MediaItem[]>(() => 
+    dataService.load('media', mockMedia)
+  );
+  const [themes, setThemes] = useState<Theme[]>(() => 
+    dataService.load('themes', mockThemes)
+  );
+  const [activeTheme, setActiveTheme] = useState<Theme | null>(() => 
+    dataService.load('activeTheme', mockThemes[0])
+  );
+  const [products, setProducts] = useState<Product[]>(() => 
+    dataService.load('products', mockProducts)
+  );
+  const [orders, setOrders] = useState<Order[]>(() => 
+    dataService.load('orders', mockOrders)
+  );
+  const [customers, setCustomers] = useState<Customer[]>(() => 
+    dataService.load('customers', mockCustomers)
+  );
+  const [categories, setCategories] = useState<Category[]>(() => 
+    dataService.load('categories', mockCategories)
+  );
+  const [coupons, setCoupons] = useState<Coupon[]>(() => 
+    dataService.load('coupons', mockCoupons)
+  );
+  const [widgets, setWidgets] = useState<Widget[]>(() => 
+    dataService.load('widgets', [])
+  );
   const [widgetTypes] = useState<WidgetType[]>(mockWidgetTypes);
+
+  // Persist data changes
+  useEffect(() => {
+    dataService.save('posts', posts);
+  }, [posts]);
+
+  useEffect(() => {
+    dataService.save('pages', pages);
+  }, [pages]);
+
+  useEffect(() => {
+    dataService.save('users', users);
+  }, [users]);
+
+  useEffect(() => {
+    dataService.save('plugins', plugins);
+  }, [plugins]);
+
+  useEffect(() => {
+    dataService.save('media', media);
+  }, [media]);
+
+  useEffect(() => {
+    dataService.save('themes', themes);
+  }, [themes]);
+
+  useEffect(() => {
+    dataService.save('activeTheme', activeTheme);
+  }, [activeTheme]);
+
+  useEffect(() => {
+    dataService.save('products', products);
+  }, [products]);
+
+  useEffect(() => {
+    dataService.save('orders', orders);
+  }, [orders]);
+
+  useEffect(() => {
+    dataService.save('customers', customers);
+  }, [customers]);
+
+  useEffect(() => {
+    dataService.save('categories', categories);
+  }, [categories]);
+
+  useEffect(() => {
+    dataService.save('coupons', coupons);
+  }, [coupons]);
+
+  useEffect(() => {
+    dataService.save('widgets', widgets);
+  }, [widgets]);
 
   // Calculate dynamic stats
   const stats: DashboardStats = {
@@ -788,6 +1105,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       updatedAt: new Date().toISOString()
     };
     setProducts(prev => [newProduct, ...prev]);
+    mockApiCall('/api/products', newProduct);
   };
 
   const updateProduct = (id: string, updates: Partial<Product>) => {
@@ -796,10 +1114,21 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         ? { ...product, ...updates, updatedAt: new Date().toISOString() }
         : product
     ));
+    mockApiCall(`/api/products/${id}`, updates);
   };
 
   const deleteProduct = (id: string) => {
     setProducts(prev => prev.filter(product => product.id !== id));
+    mockApiCall(`/api/products/${id}`, { method: 'DELETE' });
+  };
+
+  const updateOrder = (id: string, updates: Partial<Order>) => {
+    setOrders(prev => prev.map(order => 
+      order.id === id 
+        ? { ...order, ...updates, updatedAt: new Date().toISOString() }
+        : order
+    ));
+    mockApiCall(`/api/orders/${id}`, updates);
   };
 
   const createWidget = (widgetData: Omit<Widget, 'id' | 'createdAt' | 'updatedAt'>) => {
@@ -866,6 +1195,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       createProduct,
       updateProduct,
       deleteProduct,
+      updateOrder,
       widgets,
       widgetTypes,
       createWidget,
