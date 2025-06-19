@@ -50,6 +50,7 @@ interface AdminContextType {
   createProduct: (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => void;
   updateProduct: (id: string, updates: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
+  updateOrder: (id: string, updates: Partial<Order>) => void;
   
   // Widgets
   widgets: Widget[];
@@ -532,7 +533,7 @@ const mockOrders: Order[] = [
       country: 'US'
     },
     paymentMethod: 'PayPal',
-    pay mentStatus: 'paid',
+    paymentStatus: 'paid',
     createdAt: '2024-01-12T00:00:00Z',
     updatedAt: '2024-01-12T00:00:00Z'
   }
