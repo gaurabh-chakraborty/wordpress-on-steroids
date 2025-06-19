@@ -1,12 +1,17 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Save, Eye } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { useAdmin } from '@/context/AdminContext';
 import { Page } from '@/types/admin';
+import { PlateEditor } from '@/components/editor/PlateEditor';
+import { ShadcnVisualBuilder } from '@/components/editor/ShadcnVisualBuilder';
 
 interface PageEditorProps {
   page?: Page;
@@ -20,6 +25,10 @@ export const PageEditor = ({ page, onBack }: PageEditorProps) => {
   const [slug, setSlug] = useState(page?.slug || '');
   const [status, setStatus] = useState<'published' | 'draft' | 'pending'>(page?.status || 'draft');
   const [template, setTemplate] = useState(page?.template || 'default');
+  const [editorMode, setEditorMode] = useState<'text' | 'visual' | 'builder'>('text');
+  const [plateContent, setPlateContent] = useState([
+    { type: 'p', children: [{ text: page?.content || '' }] }
+  ]);
 
   const handleSave = () => {
     const pageData = {
@@ -37,6 +46,19 @@ export const PageEditor = ({ page, onBack }: PageEditorProps) => {
     }
     
     onBack();
+  };
+
+  const handleContentChange = (value: any[]) => {
+    setPlateContent(value);
+    const textContent = value
+      .map(node => node.children?.map((child: any) => child.text).join('') || '')
+      .join('\n');
+    setContent(textContent);
+  };
+
+  const handleVisualBuilderSave = (elements: any[]) => {
+    const visualContent = JSON.stringify(elements);
+    setContent(visualContent);
   };
 
   return (
@@ -82,12 +104,43 @@ export const PageEditor = ({ page, onBack }: PageEditorProps) => {
                 onChange={(e) => setSlug(e.target.value)}
                 className="text-sm"
               />
-              <textarea
-                placeholder="Write your page content here..."
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="w-full h-48 sm:h-64 p-3 border border-gray-300 rounded-md resize-none text-sm sm:text-base"
-              />
+              
+              <div>
+                <Label>Content Editor</Label>
+                <Tabs value={editorMode} onValueChange={(value: any) => setEditorMode(value)} className="w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="text">Text Editor</TabsTrigger>
+                    <TabsTrigger value="visual">Rich Editor</TabsTrigger>
+                    <TabsTrigger value="builder">
+                      <Palette className="w-4 h-4 mr-1" />
+                      Visual Builder
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="text">
+                    <textarea
+                      placeholder="Write your page content here..."
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      className="w-full h-48 sm:h-64 p-3 border border-gray-300 rounded-md resize-none text-sm sm:text-base"
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="visual">
+                    <PlateEditor
+                      value={plateContent}
+                      onChange={handleContentChange}
+                      placeholder="Start writing your page..."
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="builder">
+                    <div className="border rounded-lg overflow-hidden" style={{ height: '600px' }}>
+                      <ShadcnVisualBuilder onSave={handleVisualBuilderSave} />
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </div>
             </CardContent>
           </Card>
         </div>

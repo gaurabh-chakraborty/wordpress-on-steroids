@@ -1,14 +1,5 @@
 
 import React from 'react';
-import { 
-  Plate, 
-  PlateProvider,
-  createPlugins
-} from '@udecode/plate-common';
-import { createParagraphPlugin } from '@udecode/plate-paragraph';
-import { BaseBoldPlugin, BaseItalicPlugin, BaseUnderlinePlugin } from '@udecode/plate-basic-marks';
-import { BaseListPlugin } from '@udecode/plate-list';
-import { BaseLinkPlugin } from '@udecode/plate-link';
 import { Card } from '@/components/ui/card';
 
 interface PlateEditorProps {
@@ -17,30 +8,30 @@ interface PlateEditorProps {
   placeholder?: string;
 }
 
-const plugins = createPlugins([
-  createParagraphPlugin(),
-  BaseBoldPlugin,
-  BaseItalicPlugin,
-  BaseUnderlinePlugin,
-  BaseListPlugin,
-  BaseLinkPlugin,
-]);
-
 export const PlateEditor: React.FC<PlateEditorProps> = ({
   value = [{ type: 'p', children: [{ text: '' }] }],
   onChange,
   placeholder = 'Start typing...'
 }) => {
+  const [content, setContent] = React.useState('');
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newContent = e.target.value;
+    setContent(newContent);
+    
+    if (onChange) {
+      onChange([{ type: 'p', children: [{ text: newContent }] }]);
+    }
+  };
+
   return (
     <Card className="p-4">
-      <PlateProvider plugins={plugins} value={value} onChange={onChange}>
-        <Plate
-          editableProps={{
-            placeholder,
-            className: 'min-h-[200px] p-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
-          }}
-        />
-      </PlateProvider>
+      <textarea
+        value={content}
+        onChange={handleContentChange}
+        placeholder={placeholder}
+        className="min-h-[200px] w-full p-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+      />
     </Card>
   );
 };

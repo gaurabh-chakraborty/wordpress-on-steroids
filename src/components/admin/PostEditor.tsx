@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Save, Eye, Calendar, Tag, Folder } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Calendar, Tag, Folder, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,9 +8,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAdmin } from '@/context/AdminContext';
 import { Post } from '@/types/admin';
 import { PlateEditor } from '@/components/editor/PlateEditor';
+import { ShadcnVisualBuilder } from '@/components/editor/ShadcnVisualBuilder';
 
 interface PostEditorProps {
   post?: Post;
@@ -26,6 +28,7 @@ export const PostEditor = ({ post, onBack }: PostEditorProps) => {
   const [tags, setTags] = useState(post?.tags.join(', ') || '');
   const [categories, setCategories] = useState(post?.categories.join(', ') || '');
   const [featuredImage, setFeaturedImage] = useState(post?.featuredImage || '');
+  const [editorMode, setEditorMode] = useState<'text' | 'visual' | 'builder'>('text');
   const [plateContent, setPlateContent] = useState([
     { type: 'p', children: [{ text: post?.content || '' }] }
   ]);
@@ -64,9 +67,15 @@ export const PostEditor = ({ post, onBack }: PostEditorProps) => {
     setStatus(value as 'published' | 'draft' | 'pending');
   };
 
+  const handleVisualBuilderSave = (elements: any[]) => {
+    // Convert visual builder elements to content
+    const visualContent = JSON.stringify(elements);
+    setContent(visualContent);
+  };
+
   return (
     <div className="container py-6 px-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-4">
             <Button variant="ghost" onClick={onBack}>
@@ -89,9 +98,9 @@ export const PostEditor = ({ post, onBack }: PostEditorProps) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Post Content</CardTitle>
@@ -109,12 +118,41 @@ export const PostEditor = ({ post, onBack }: PostEditorProps) => {
                 </div>
 
                 <div>
-                  <Label>Content</Label>
-                  <PlateEditor
-                    value={plateContent}
-                    onChange={handleContentChange}
-                    placeholder="Start writing your post..."
-                  />
+                  <Label>Content Editor</Label>
+                  <Tabs value={editorMode} onValueChange={(value: any) => setEditorMode(value)} className="w-full">
+                    <TabsList className="grid w-full grid-cols-3">
+                      <TabsTrigger value="text">Text Editor</TabsTrigger>
+                      <TabsTrigger value="visual">Rich Editor</TabsTrigger>
+                      <TabsTrigger value="builder">
+                        <Palette className="w-4 h-4 mr-1" />
+                        Visual Builder
+                      </TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="text">
+                      <Textarea
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        placeholder="Start writing your post..."
+                        rows={12}
+                        className="w-full"
+                      />
+                    </TabsContent>
+                    
+                    <TabsContent value="visual">
+                      <PlateEditor
+                        value={plateContent}
+                        onChange={handleContentChange}
+                        placeholder="Start writing your post..."
+                      />
+                    </TabsContent>
+                    
+                    <TabsContent value="builder">
+                      <div className="border rounded-lg overflow-hidden" style={{ height: '600px' }}>
+                        <ShadcnVisualBuilder onSave={handleVisualBuilderSave} />
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </div>
 
                 <div>
