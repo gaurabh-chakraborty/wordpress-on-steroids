@@ -3,15 +3,12 @@ import React from 'react';
 import { 
   Plate, 
   PlateProvider,
-  createPlugins,
-  ParagraphPlugin,
-  HeadingPlugin,
-  BoldPlugin,
-  ItalicPlugin,
-  UnderlinePlugin,
-  ListPlugin,
-  LinkPlugin
+  createPlugins
 } from '@udecode/plate-common';
+import { ParagraphPlugin } from '@udecode/plate-paragraph';
+import { BoldPlugin, ItalicPlugin, UnderlinePlugin } from '@udecode/plate-basic-marks';
+import { ListPlugin } from '@udecode/plate-list';
+import { LinkPlugin } from '@udecode/plate-link';
 import { Card } from '@/components/ui/card';
 
 interface PlateEditorProps {
@@ -22,7 +19,6 @@ interface PlateEditorProps {
 
 const plugins = createPlugins([
   ParagraphPlugin,
-  HeadingPlugin,
   BoldPlugin,
   ItalicPlugin,
   UnderlinePlugin,
