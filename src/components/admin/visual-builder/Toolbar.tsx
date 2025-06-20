@@ -32,7 +32,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             variant="ghost" 
             size="sm"
             onClick={undo}
-            disabled={hist}
+            disabled={historyIndex <= 0}
           >
             <Undo className="w-4 h-4" />
           </Button>
