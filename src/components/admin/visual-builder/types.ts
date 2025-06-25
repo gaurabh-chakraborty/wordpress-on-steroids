@@ -30,7 +30,7 @@ export interface ElementStyle {
 
 export interface Element {
   id: string;
-  type: 'text' | 'image' | 'button' | 'container' | 'video' | 'divider' | 'spacer' | 'column' | 'heading' | 'list' | 'quote' | 'icon' | 'link';
+  type: 'text' | 'image' | 'button' | 'container' | 'video' | 'divider' | 'spacer' | 'column' | 'heading' | 'list' | 'quote' | 'icon' | 'link' | 'hero' | 'navigation' | 'footer' | 'card' | 'cta' | 'testimonial' | 'pricing' | 'slider';
   content: string;
   styles: ElementStyle;
   position: { x: number; y: number };
