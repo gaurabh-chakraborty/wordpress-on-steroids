@@ -1,4 +1,4 @@
-# Wordpress On Steroids/
+# Wordpress On Steroids
 ## Vision
 
 **Wordpress On Steroids** is an open source, AI-powered platform designed to revolutionize the way we build CMS and admin dashboard experiences. Our goal is to take the extensibility of WordPress, supercharge it with React, and automate as much of the development as possible using AI large language models (LLMs), aiming for minimal human intervention.
