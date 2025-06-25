@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { SEOOptimizerPlugin } from '@/components/plugins/SEOOptimizerPlugin';
 import { ContactFormPlugin } from '@/components/plugins/ContactFormPlugin';
 import { SocialSharePlugin } from '@/components/plugins/SocialSharePlugin';
+import { WooCommercePlugin } from '@/components/plugins/WooCommercePlugin';
 import { Plugin } from '@/types/admin';
 
 interface PluginSettingsProps {
@@ -21,6 +22,8 @@ export const PluginSettings = ({ plugin, onBack }: PluginSettingsProps) => {
         return <ContactFormPlugin />;
       case '3':
         return <SocialSharePlugin />;
+      case '6':
+        return <WooCommercePlugin />;
       default:
         return (
           <div className="text-center py-12">

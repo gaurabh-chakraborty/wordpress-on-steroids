@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Puzzle, 
@@ -10,7 +11,8 @@ import {
   Shield,
   Zap,
   Mail,
-  Share2
+  Share2,
+  ShoppingCart
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,7 +27,8 @@ const iconMap: Record<string, any> = {
   Mail: Mail,
   Share2: Share2,
   Shield: Shield,
-  Zap: Zap
+  Zap: Zap,
+  ShoppingCart: ShoppingCart
 };
 
 export const PluginManager = () => {
@@ -55,6 +58,16 @@ export const PluginManager = () => {
       isActive: false,
       isInstalled: false,
       icon: 'Zap'
+    },
+    {
+      id: '6',
+      name: 'WooCommerce',
+      description: 'Complete e-commerce solution with products, orders, payments, and shipping',
+      version: '8.2.1',
+      author: 'WooCommerce Team',
+      isActive: false,
+      isInstalled: false,
+      icon: 'ShoppingCart'
     }
   ];
 
