@@ -1,14 +1,61 @@
-
 import React from 'react';
 import { Star } from 'lucide-react';
 import { Element } from './types';
+import { HeroSection } from './components/HeroSection';
+import { Navigation } from './components/Navigation';
+import { Footer } from './components/Footer';
+import { CustomCard } from './components/Card';
+import { CallToAction } from './components/CallToAction';
+import { Testimonial } from './components/Testimonial';
+import { PricingCard } from './components/PricingCard';
+import { ImageSlider } from './components/ImageSlider';
 
 interface ElementRendererProps {
   element: Element;
 }
 
 export const ElementRenderer: React.FC<ElementRendererProps> = ({ element }) => {
+  const parseContent = (content: string) => {
+    try {
+      return JSON.parse(content);
+    } catch {
+      return {};
+    }
+  };
+
   switch (element.type) {
+    case 'hero':
+      const heroProps = parseContent(element.content);
+      return <HeroSection {...heroProps} styles={element.styles} />;
+    
+    case 'navigation':
+      const navProps = parseContent(element.content);
+      return <Navigation {...navProps} styles={element.styles} />;
+    
+    case 'footer':
+      const footerProps = parseContent(element.content);
+      return <Footer {...footerProps} styles={element.styles} />;
+    
+    case 'card':
+      const cardProps = parseContent(element.content);
+      return <CustomCard {...cardProps} styles={element.styles} />;
+    
+    case 'cta':
+      const ctaProps = parseContent(element.content);
+      return <CallToAction {...ctaProps} styles={element.styles} />;
+    
+    case 'testimonial':
+      const testimonialProps = parseContent(element.content);
+      return <Testimonial {...testimonialProps} styles={element.styles} />;
+    
+    case 'pricing':
+      const pricingProps = parseContent(element.content);
+      return <PricingCard {...pricingProps} styles={element.styles} />;
+    
+    case 'slider':
+      const sliderProps = parseContent(element.content);
+      return <ImageSlider {...sliderProps} styles={element.styles} />;
+
     case 'text':
       return (
         <div style={{ ...element.styles, width: '100%', height: '100%', overflow: 'hidden' }}>

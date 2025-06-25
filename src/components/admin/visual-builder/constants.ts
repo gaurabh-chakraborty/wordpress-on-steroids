@@ -14,7 +14,14 @@ import {
   Link,
   Monitor,
   Tablet,
-  Smartphone
+  Smartphone,
+  Menu,
+  Home,
+  CreditCard,
+  MessageSquare,
+  Phone,
+  Play,
+  Users
 } from 'lucide-react';
 import { Element, ResizeHandle } from './types';
 
@@ -49,16 +56,31 @@ export const fontFamilies = [
 ];
 
 export const elementTypes = [
+  // Basic Elements
   { type: 'heading', label: 'Heading', icon: Type },
   { type: 'text', label: 'Text', icon: Type },
   { type: 'image', label: 'Image', icon: Image },
   { type: 'button', label: 'Button', icon: Square },
   { type: 'link', label: 'Link', icon: Link },
+  
+  // Layout Elements
   { type: 'container', label: 'Container', icon: Layout },
-  { type: 'video', label: 'Video', icon: Video },
   { type: 'divider', label: 'Divider', icon: Grid3X3 },
   { type: 'spacer', label: 'Spacer', icon: Move },
   { type: 'column', label: 'Column', icon: Columns },
+  
+  // Website Components
+  { type: 'hero', label: 'Hero Section', icon: Home },
+  { type: 'navigation', label: 'Navigation', icon: Menu },
+  { type: 'footer', label: 'Footer', icon: Layout },
+  { type: 'card', label: 'Card', icon: Square },
+  { type: 'cta', label: 'Call to Action', icon: Phone },
+  { type: 'testimonial', label: 'Testimonial', icon: MessageSquare },
+  { type: 'pricing', label: 'Pricing Card', icon: CreditCard },
+  { type: 'slider', label: 'Image Slider', icon: Play },
+  
+  // Content Elements
+  { type: 'video', label: 'Video', icon: Video },
   { type: 'list', label: 'List', icon: List },
   { type: 'quote', label: 'Quote', icon: Quote },
   { type: 'icon', label: 'Icon', icon: Star }
@@ -73,64 +95,25 @@ export const viewportSizes = [
 export const defaultElements: Element[] = [
   {
     id: '1',
-    type: 'heading',
-    content: 'Welcome to Our Amazing Website',
-    styles: { 
-      fontSize: '48px', 
-      fontWeight: 'bold', 
-      color: '#1f2937',
-      textAlign: 'center',
-      padding: '20px',
-      fontFamily: 'Roboto, sans-serif'
-    },
-    position: { x: 50, y: 50 },
-    size: { width: 600, height: 80 }
+    type: 'hero',
+    content: JSON.stringify({
+      title: 'Welcome to Our Amazing Platform',
+      subtitle: 'Create, build, and grow your business with our powerful tools',
+      buttonText: 'Get Started Today'
+    }),
+    styles: {},
+    position: { x: 0, y: 0 },
+    size: { width: 800, height: 400 }
   },
   {
     id: '2',
-    type: 'text',
-    content: 'Discover innovative solutions that transform your business and drive success in the digital age.',
-    styles: { 
-      fontSize: '18px', 
-      color: '#6b7280',
-      textAlign: 'center',
-      padding: '15px',
-      lineHeight: '1.6',
-      fontFamily: 'Open Sans, sans-serif'
-    },
-    position: { x: 50, y: 150 },
-    size: { width: 600, height: 60 }
-  },
-  {
-    id: '3',
-    type: 'button',
-    content: 'Get Started Today',
-    styles: { 
-      backgroundColor: '#3b82f6',
-      color: '#ffffff',
-      fontSize: '16px',
-      fontWeight: '600',
-      padding: '15px 30px',
-      borderRadius: '8px',
-      textAlign: 'center',
-      border: 'none',
-      cursor: 'pointer',
-      boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-    },
-    position: { x: 300, y: 240 },
-    size: { width: 200, height: 50 },
-    link: 'https://example.com/signup'
-  },
-  {
-    id: '4',
-    type: 'image',
-    content: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=600&fit=crop',
-    styles: { 
-      borderRadius: '12px',
-      boxShadow: '0 8px 24px rgba(0,0,0,0.12)'
-    },
-    position: { x: 50, y: 320 },
-    size: { width: 300, height: 200 },
-    alt: 'Modern office workspace'
+    type: 'navigation',
+    content: JSON.stringify({
+      logo: 'Your Brand',
+      menuItems: ['Home', 'About', 'Services', 'Contact']
+    }),
+    styles: {},
+    position: { x: 0, y: 0 },
+    size: { width: 800, height: 80 }
   }
 ];
