@@ -16,6 +16,7 @@ export const VisualBuilder: React.FC = () => {
   const [historyIndex, setHistoryIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [activeTab, setActiveTab] = useState('content');
   const canvasRef = useRef<HTMLDivElement>(null);
 
   const addToHistory = useCallback((newElements: Element[]) => {
@@ -41,13 +42,13 @@ export const VisualBuilder: React.FC = () => {
     }
   }, [history, historyIndex]);
 
-  const addElement = useCallback((type: Element['type'], position: { x: number; y: number }) => {
+  const addElement = useCallback((type: Element['type']) => {
     const newElement: Element = {
       id: Date.now().toString(),
       type,
       content: getDefaultContent(type),
       styles: {},
-      position,
+      position: { x: 50, y: 50 },
       size: { width: 200, height: 100 },
     };
 
@@ -86,38 +87,12 @@ export const VisualBuilder: React.FC = () => {
     });
   }, [elements, addToHistory, toast]);
 
-  const handleMouseDown = useCallback((e: React.MouseEvent, elementId: string, handle?: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
+  const handleElementClick = useCallback((elementId: string) => {
     const element = elements.find(el => el.id === elementId);
-    if (!element) return;
-
-    setSelectedElement(element);
-    setIsDragging(true);
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    });
+    if (element) {
+      setSelectedElement(element);
+    }
   }, [elements]);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isDragging || !selectedElement || !canvasRef.current) return;
-
-    const canvasRect = canvasRef.current.getBoundingClientRect();
-    const newX = e.clientX - canvasRect.left - dragOffset.x;
-    const newY = e.clientY - canvasRect.top - dragOffset.y;
-
-    updateElement(selectedElement.id, {
-      position: { x: Math.max(0, newX), y: Math.max(0, newY) }
-    });
-  }, [isDragging, selectedElement, dragOffset, updateElement]);
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, []);
 
   const saveDesign = useCallback(() => {
     const designData = {
@@ -159,7 +134,14 @@ export const VisualBuilder: React.FC = () => {
 
   return (
     <div className="h-screen flex bg-gray-50">
-      <ElementSidebar onAddElement={addElement} />
+      <ElementSidebar 
+        selectedElement={selectedElement}
+        setSelectedElement={setSelectedElement}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        addElement={addElement}
+        updateElement={updateElement}
+      />
       
       <div className="flex-1 flex flex-col">
         <Toolbar
@@ -181,18 +163,36 @@ export const VisualBuilder: React.FC = () => {
               maxWidth: '100%',
               transition: 'width 0.3s ease'
             }}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
             onClick={() => setSelectedElement(null)}
           >
             {elements.map(element => (
-              <ElementRenderer
+              <div
                 key={element.id}
-                element={element}
-                selectedElement={selectedElement}
-                onMouseDown={handleMouseDown}
-                onDelete={deleteElement}
-              />
+                className={`absolute cursor-pointer ${selectedElement?.id === element.id ? 'ring-2 ring-blue-500' : ''}`}
+                style={{
+                  left: element.position.x,
+                  top: element.position.y,
+                  width: element.size.width,
+                  height: element.size.height,
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleElementClick(element.id);
+                }}
+              >
+                <ElementRenderer element={element} />
+                {selectedElement?.id === element.id && (
+                  <button
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteElement(element.id);
+                    }}
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
             ))}
             
             {elements.length === 0 && (
@@ -206,12 +206,6 @@ export const VisualBuilder: React.FC = () => {
           </div>
         </div>
       </div>
-      
-      <StylePanel
-        selectedElement={selectedElement}
-        onUpdateElement={updateElement}
-        onClose={() => setSelectedElement(null)}
-      />
     </div>
   );
 };
