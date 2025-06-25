@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { AdminProvider, useAdmin } from '@/context/AdminContext';
 import { AdminSidebar } from './AdminSidebar';
@@ -5,7 +6,7 @@ import { Dashboard } from './Dashboard';
 import { PostManager } from './PostManager';
 import { PageManager } from './PageManager';
 import { PluginManager } from './PluginManager';
-import { VisualBuilder } from './VisualBuilder';
+import { VisualBuilder } from './visual-builder/VisualBuilder';
 import { UserManager } from './UserManager';
 import { MediaLibrary } from './MediaLibrary';
 import { Settings } from './Settings';
