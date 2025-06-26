@@ -3,14 +3,14 @@ import { AdminPanel } from '@/components/admin/AdminPanel';
 import { FrontendHome } from './FrontendHome';
 
 const Index = () => {
-  // For now, let's show the frontend home. You can add a toggle later
-  const showAdmin = new URLSearchParams(window.location.search).get('admin') === 'true';
+  const showAdmin = new URLSearchParams(window.location.search).has('admin');
   
   if (showAdmin) {
     return <AdminPanel />;
   }
   
-  return <FrontendHome />;
+  // Default to AdminPanel for now since this appears to be an admin-focused application
+  return <AdminPanel />;
 };
 
 export default Index;
