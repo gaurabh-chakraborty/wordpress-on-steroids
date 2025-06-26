@@ -19,7 +19,11 @@ const iconMap: Record<string, any> = {
   Share2: require('lucide-react').Share2,
   Shield: require('lucide-react').Shield,
   Zap: require('lucide-react').Zap,
-  ShoppingCart: require('lucide-react').ShoppingCart
+  ShoppingCart: require('lucide-react').ShoppingCart,
+  Layout: require('lucide-react').Layout,
+  Play: require('lucide-react').Play,
+  MessageCircle: require('lucide-react').MessageCircle,
+  User: require('lucide-react').User
 };
 
 interface PluginCardProps {

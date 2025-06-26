@@ -54,6 +54,46 @@ export const PluginManager = () => {
       isActive: false,
       isInstalled: false,
       icon: 'Layout'
+    },
+    {
+      id: '8',
+      name: 'Slider Revolution',
+      description: 'Create stunning responsive sliders with advanced animations and effects',
+      version: '6.5.8',
+      author: 'Revolution Team',
+      isActive: false,
+      isInstalled: false,
+      icon: 'Play'
+    },
+    {
+      id: '9',
+      name: 'Newsletter Manager',
+      description: 'Complete email marketing solution with campaigns, forms, and automation',
+      version: '2.3.1',
+      author: 'Mail Pro',
+      isActive: false,
+      isInstalled: false,
+      icon: 'Mail'
+    },
+    {
+      id: '10',
+      name: 'Live Chat',
+      description: 'Real-time customer support with chat widgets, automation, and AI integration',
+      version: '4.1.2',
+      author: 'Chat Solutions',
+      isActive: false,
+      isInstalled: false,
+      icon: 'MessageCircle'
+    },
+    {
+      id: '11',
+      name: 'User Accounts',
+      description: 'Complete user management system with profiles, authentication, and subscriptions',
+      version: '3.0.5',
+      author: 'Account Pro',
+      isActive: false,
+      isInstalled: false,
+      icon: 'User'
     }
   ];
 

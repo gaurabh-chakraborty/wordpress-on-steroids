@@ -6,6 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plugin } from '@/types/admin';
 import { WooCommercePlugin } from '@/components/plugins/WooCommercePlugin';
 import { TemplateLibraryPlugin } from '@/components/plugins/TemplateLibraryPlugin';
+import { SliderRevolutionPlugin } from '@/components/plugins/SliderRevolutionPlugin';
+import { NewsletterPlugin } from '@/components/plugins/NewsletterPlugin';
+import { ChatPlugin } from '@/components/plugins/ChatPlugin';
+import { UserAccountPlugin } from '@/components/plugins/UserAccountPlugin';
 
 interface PluginSettingsProps {
   plugin: Plugin;
@@ -19,6 +23,14 @@ export const PluginSettings = ({ plugin, onBack }: PluginSettingsProps) => {
         return <WooCommercePlugin />;
       case 'Template Library':
         return <TemplateLibraryPlugin />;
+      case 'Slider Revolution':
+        return <SliderRevolutionPlugin />;
+      case 'Newsletter Manager':
+        return <NewsletterPlugin />;
+      case 'Live Chat':
+        return <ChatPlugin />;
+      case 'User Accounts':
+        return <UserAccountPlugin />;
       default:
         return (
           <Card>
