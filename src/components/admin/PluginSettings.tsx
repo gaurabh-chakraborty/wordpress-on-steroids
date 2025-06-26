@@ -1,12 +1,11 @@
 
 import React from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SEOOptimizerPlugin } from '@/components/plugins/SEOOptimizerPlugin';
-import { ContactFormPlugin } from '@/components/plugins/ContactFormPlugin';
-import { SocialSharePlugin } from '@/components/plugins/SocialSharePlugin';
-import { WooCommercePlugin } from '@/components/plugins/WooCommercePlugin';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plugin } from '@/types/admin';
+import { WooCommercePlugin } from '@/components/plugins/WooCommercePlugin';
+import { TemplateLibraryPlugin } from '@/components/plugins/TemplateLibraryPlugin';
 
 interface PluginSettingsProps {
   plugin: Plugin;
@@ -14,40 +13,45 @@ interface PluginSettingsProps {
 }
 
 export const PluginSettings = ({ plugin, onBack }: PluginSettingsProps) => {
-  const renderPluginSettings = () => {
-    switch (plugin.id) {
-      case '1':
-        return <SEOOptimizerPlugin />;
-      case '2':
-        return <ContactFormPlugin />;
-      case '3':
-        return <SocialSharePlugin />;
-      case '6':
+  const renderPluginContent = () => {
+    switch (plugin.name) {
+      case 'WooCommerce':
         return <WooCommercePlugin />;
+      case 'Template Library':
+        return <TemplateLibraryPlugin />;
       default:
         return (
-          <div className="text-center py-12">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No Settings Available</h3>
-            <p className="text-gray-600">This plugin doesn't have any configurable settings.</p>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Settings className="w-5 h-5" />
+                <span>{plugin.name} Settings</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600">
+                Settings for {plugin.name} will be available here.
+              </p>
+            </CardContent>
+          </Card>
         );
     }
   };
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center space-x-4 mb-6">
-        <Button variant="ghost" onClick={onBack}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Plugins
+      <div className="flex items-center space-x-4">
+        <Button variant="ghost" onClick={onBack} className="flex items-center space-x-2">
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Plugins</span>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{plugin.name} Settings</h1>
-          <p className="text-gray-600">Configure {plugin.name} plugin settings</p>
+          <h1 className="text-3xl font-bold text-gray-900">{plugin.name}</h1>
+          <p className="text-gray-600 mt-1">{plugin.description}</p>
         </div>
       </div>
 
-      {renderPluginSettings()}
+      {renderPluginContent()}
     </div>
   );
 };

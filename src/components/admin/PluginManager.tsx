@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -45,6 +44,16 @@ export const PluginManager = () => {
       isActive: false,
       isInstalled: false,
       icon: 'ShoppingCart'
+    },
+    {
+      id: '7',
+      name: 'Template Library',
+      description: 'Professional templates and layouts for visual building - like Elementor for WordPress',
+      version: '1.0.0',
+      author: 'Template Pro',
+      isActive: false,
+      isInstalled: false,
+      icon: 'Layout'
     }
   ];
 
