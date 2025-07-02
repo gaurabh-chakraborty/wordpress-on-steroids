@@ -16,21 +16,18 @@ import { Settings } from './Settings';
 import { WidgetManager } from './WidgetManager';
 import { MenuManager } from './MenuManager';
 import { MediaLibrary } from './MediaLibrary';
+import { SystemManager } from './SystemManager';
+import { ProductManager } from './ProductManager';
+import { OrderManager } from './OrderManager';
+import { CustomerManager } from './CustomerManager';
+import { PaymentManager } from './PaymentManager';
 import { VisualBuilder } from './visual-builder/VisualBuilder';
 import { useAdmin } from '@/context/AdminContext';
-import { Page, Post, User, Plugin, Theme } from '@/types/admin';
 
 export const AdminPanel = () => {
   console.log('AdminPanel component loading...');
   
-  const [activeView, setActiveView] = useState('dashboard');
-  const [editingPage, setEditingPage] = useState<Page | undefined>();
-  const [editingPost, setEditingPost] = useState<Post | undefined>();
-  const [editingUser, setEditingUser] = useState<User | undefined>();
-  const [selectedPlugin, setSelectedPlugin] = useState<Plugin | undefined>();
-  const [customizingTheme, setCustomizingTheme] = useState<Theme | undefined>();
-
-  const { isAuthenticated } = useAdmin();
+  const { isAuthenticated, activeSection } = useAdmin();
 
   if (!isAuthenticated) {
     console.log('User not authenticated, showing login...');
@@ -52,127 +49,38 @@ export const AdminPanel = () => {
     );
   }
 
-  console.log('Current active view:', activeView);
+  console.log('Current active section:', activeSection);
 
   const renderContent = () => {
-    switch (activeView) {
+    switch (activeSection) {
       case 'dashboard':
         return <Dashboard />;
       case 'pages':
-        return (
-          <PageManager
-            onEdit={(page) => {
-              setEditingPage(page);
-              setActiveView('page-editor');
-            }}
-            onNew={() => {
-              setEditingPage(undefined);
-              setActiveView('page-editor');
-            }}
-          />
-        );
-      case 'page-editor':
-        return (
-          <PageEditor
-            page={editingPage}
-            onBack={() => {
-              setEditingPage(undefined);
-              setActiveView('pages');
-            }}
-          />
-        );
+        return <PageManager />;
       case 'posts':
-        return (
-          <PostManager
-            onEdit={(post) => {
-              setEditingPost(post);
-              setActiveView('post-editor');
-            }}
-            onNew={() => {
-              setEditingPost(undefined);
-              setActiveView('post-editor');
-            }}
-          />
-        );
-      case 'post-editor':
-        return (
-          <PostEditor
-            post={editingPost}
-            onBack={() => {
-              setEditingPost(undefined);
-              setActiveView('posts');
-            }}
-          />
-        );
-      case 'visual-builder':
-        return <VisualBuilder />;
-      case 'themes':
-        return (
-          <ThemeManager
-            onCustomize={(theme) => {
-              setCustomizingTheme(theme);
-              setActiveView('theme-customizer');
-            }}
-          />
-        );
-      case 'theme-customizer':
-        return (
-          <ThemeCustomizer
-            theme={customizingTheme}
-            onBack={() => {
-              setCustomizingTheme(undefined);
-              setActiveView('themes');
-            }}
-          />
-        );
-      case 'plugins':
-        return (
-          <PluginManager
-            onSettings={(plugin) => {
-              setSelectedPlugin(plugin);
-              setActiveView('plugin-settings');
-            }}
-          />
-        );
-      case 'plugin-settings':
-        return selectedPlugin ? (
-          <PluginSettings
-            plugin={selectedPlugin}
-            onBack={() => {
-              setSelectedPlugin(undefined);
-              setActiveView('plugins');
-            }}
-          />
-        ) : null;
-      case 'users':
-        return (
-          <UserManager
-            onEdit={(user) => {
-              setEditingUser(user);
-              setActiveView('user-editor');
-            }}
-            onNew={() => {
-              setEditingUser(undefined);
-              setActiveView('user-editor');
-            }}
-          />
-        );
-      case 'user-editor':
-        return (
-          <UserEditor
-            user={editingUser}
-            onBack={() => {
-              setEditingUser(undefined);
-              setActiveView('users');
-            }}
-          />
-        );
-      case 'widgets':
-        return <WidgetManager />;
-      case 'menus':
-        return <MenuManager />;
+        return <PostManager />;
       case 'media':
         return <MediaLibrary />;
+      case 'products':
+        return <ProductManager />;
+      case 'orders':
+        return <OrderManager />;
+      case 'customers':
+        return <CustomerManager />;
+      case 'payments':
+        return <PaymentManager />;
+      case 'themes':
+        return <ThemeManager />;
+      case 'menus':
+        return <MenuManager />;
+      case 'visual-builder':
+        return <VisualBuilder />;
+      case 'users':
+        return <UserManager />;
+      case 'plugins':
+        return <PluginManager />;
+      case 'system':
+        return <SystemManager />;
       case 'settings':
         return <Settings />;
       default:
@@ -182,7 +90,7 @@ export const AdminPanel = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <AdminSidebar activeView={activeView} onViewChange={setActiveView} />
+      <AdminSidebar />
       <main className="flex-1 overflow-auto">
         {renderContent()}
       </main>
