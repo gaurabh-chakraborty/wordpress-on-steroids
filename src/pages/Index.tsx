@@ -9,8 +9,8 @@ const Index = () => {
     return <AdminPanel />;
   }
   
-  // Default to AdminPanel for now since this appears to be an admin-focused application
-  return <AdminPanel />;
+  // Show the frontend website by default
+  return <FrontendHome />;
 };
 
 export default Index;
